@@ -1,9 +1,12 @@
 package com.conference.entities;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import org.hibernate.annotations.CreationTimestamp;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -37,6 +40,10 @@ public class Conference {
   private String venue;
   private String start_date;
   private String close_date;
+  @CreationTimestamp // This annotation automatically populates the field with the current timestamp
+                     // on entity creation
+  @Column(name = "creation_date_time", updatable = false)
+  private LocalDateTime creationDateTime;
   // @OneToMany(mappedBy = "conference", cascade = CascadeType.ALL)
   // private Set<Author_Work> author_Works = new HashSet<>();
 

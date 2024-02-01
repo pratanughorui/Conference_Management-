@@ -1,5 +1,6 @@
 package com.conference.payloads;
 
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -38,6 +39,8 @@ public class ConferenceDto {
 
     @NotEmpty
     private String close_date;
+
+    private LocalDateTime creationDateTime;
 
     // private Set<AuthorWorkDto> author_Works;
     // private Set<UserDto> user;
