@@ -27,7 +27,7 @@ public class UserDto {
     @NotEmpty
     private String mobile;
 
-    private String conference_name;
+    // private String conference_name;
     // @NotEmpty
     // private String user_type;
     @NotEmpty

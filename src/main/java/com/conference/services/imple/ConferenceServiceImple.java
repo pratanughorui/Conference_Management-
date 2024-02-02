@@ -26,13 +26,13 @@ public class ConferenceServiceImple implements ConferenceService {
     @Autowired
     private ModelMapper modelMapper;
 
-    @Override
-    public ConferenceDto createConference(ConferenceDto conferenceDto) {
-        // System.out.println("pratanu");
-        Conference conference = this.dtoToentity(conferenceDto);
-        Conference savedconference = this.conferenceRepo.save(conference);
-        return this.entityTodto(savedconference);
-    }
+    // @Override
+    // public ConferenceDto createConference(ConferenceDto conferenceDto) {
+    // // System.out.println("pratanu");
+    // Conference conference = this.dtoToentity(conferenceDto);
+    // Conference savedconference = this.conferenceRepo.save(conference);
+    // return this.entityTodto(savedconference);
+    // }
 
     public ConferenceDto entityTodto(Conference conference) {
         ConferenceDto conferenceDto = new ConferenceDto();
@@ -50,20 +50,20 @@ public class ConferenceServiceImple implements ConferenceService {
 
     }
 
-    public Conference dtoToentity(ConferenceDto conferenceDto) {
-        Conference conference = new Conference();
-        conference.setClose_date(conferenceDto.getClose_date());
-        conference.setConference_id(conferenceDto.getConference_id());
-        conference.setConferences_name(conferenceDto.getConferences_name());
-        conference.setOrganization_name(conferenceDto.getOrganization_name());
-        conference.setStart_date(conferenceDto.getStart_date());
-        conference.setSubject(conferenceDto.getSubject());
-        conference.setTrack(conferenceDto.getTrack());
-        conference.setVenue(conferenceDto.getVenue());
-        // conference.setAuthor_Works(null);
-        conference.setUser(null);
-        return conference;
-    }
+    // public Conference dtoToentity(ConferenceDto conferenceDto) {
+    // Conference conference = new Conference();
+    // conference.setClose_date(conferenceDto.getClose_date());
+    // conference.setConference_id(conferenceDto.getConference_id());
+    // conference.setConferences_name(conferenceDto.getConferences_name());
+    // conference.setOrganization_name(conferenceDto.getOrganization_name());
+    // conference.setStart_date(conferenceDto.getStart_date());
+    // conference.setSubject(conferenceDto.getSubject());
+    // conference.setTrack(conferenceDto.getTrack());
+    // conference.setVenue(conferenceDto.getVenue());
+    // // conference.setAuthor_Works(null);
+    // conference.setUser(null);
+    // return conference;
+    // }
 
     @Override
     public ConferenceDto updateConference(ConferenceDto conferenceDto, Integer conference_id) {
@@ -84,7 +84,9 @@ public class ConferenceServiceImple implements ConferenceService {
     public void deleteConference(Integer conference_id) {
         Conference conference = this.conferenceRepo.findById(conference_id)
                 .orElseThrow(() -> new ResourceNotFoundException("Conference", "id", conference_id));
-        this.conferenceRepo.delete(conference);
+        this.conferenceRepo.deleteById(conference_id);
+        ;
+        ;
     }
 
     @Override

@@ -21,10 +21,12 @@ public class committeememberController {
     @Autowired
     private CommitteemamberService committeemamberService;
 
-    @PostMapping("/createCommitteeMember")
-    public ResponseEntity<?> CreateCommitteeMember(@RequestBody UserDto userDto) {
-        this.committeemamberService.CreateCommitteeMember(userDto);
-        return new ResponseEntity<>(Map.of("message", "Committee member created Successfully"), HttpStatus.OK);
-    }
+    // @PostMapping("/createCommitteeMember")
+    // public ResponseEntity<?> CreateCommitteeMember(@RequestBody UserDto userDto)
+    // {
+    // this.committeemamberService.CreateCommitteeMember(userDto);
+    // return new ResponseEntity<>(Map.of("message", "Committee member created
+    // Successfully"), HttpStatus.OK);
+    // }
 
 }
