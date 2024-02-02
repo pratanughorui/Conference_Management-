@@ -21,7 +21,6 @@ import com.conference.services.CommitteemamberService;
 import com.conference.config.AppConstants;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.Null;
 
 @Service
 public class CommitteemamberServiceImple implements CommitteemamberService {
@@ -36,36 +35,36 @@ public class CommitteemamberServiceImple implements CommitteemamberService {
 
     @Override
     public void CreateCommitteeMember(UserDto userDto) {
-        String email = userDto.getEmail();
-        String conference = userDto.getConference_name();
-        Conference con = this.conferenceRepo.findByConference_name(conference);
-        Role role = this.roleRepo.findByRole_name("programme_committee");
-        Users existUsers = this.userRepo.findByEmail(email);
-        if (existUsers != null) {
-            Set<Conference> exConferences = existUsers.getConferences();
-
-            Set<Role> exRoles = existUsers.getRoles();
-
-            if (exConferences.contains(con) && exRoles.contains(role)) {
-                // error
+        String conference_name = userDto.getConference_name();
+        // System.out.println("hisisisisiissi");
+        Users existingUser = this.userRepo.findByEmail(userDto.getEmail());
+        if (existingUser != null) {
+            Set<Role> existingRoles = existingUser.getRoles();
+            Role newRole = this.roleRepo.findByRole_name("Programme Committee");
+            Set<Conference> existingConferences = existingUser.getConferences();
+            Conference conference = this.conferenceRepo.findByConference_name(conference_name);
+            if (existingRoles.contains(newRole) && existingConferences.contains(conference)) {
+                // handle this error
+                throw new DataIntegrityViolationException("User already has the specified role");
             } else {
-                exConferences.add(con);
-                exRoles.add(role);
-                existUsers.setConferences(exConferences);
-                existUsers.setRoles(exRoles);
-                this.userRepo.save(existUsers);
+                existingConferences.add(conference);
+                existingUser.setConferences(existingConferences);
+                existingRoles.add(newRole);
+                existingUser.setRoles(existingRoles);
+                this.userRepo.save(existingUser);
+
             }
+
         } else {
-            Set<Conference> conferences = new HashSet<>();
-            Set<Role> roles = new HashSet<>();
-            conferences.add(con);
-            roles.add(role);
-            Users user = this.dtoTouser(userDto);
-            user.setConferences(conferences);
-            user.setRoles(roles);
-            this.userRepo.save(user);
+            Users newuser = this.dtoTouser(userDto);
+            Set<Role> role = this.roleRepo.findByAllRole_name("Programme Committee");
+            Set<Conference> conference = this.conferenceRepo.findByAllConference_name(conference_name);
+            newuser.setConferences(conference);
+            newuser.setRoles(role);
+            this.userRepo.save(newuser);
 
         }
+
     }
 
     public Users dtoTouser(UserDto userDto) {

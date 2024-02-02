@@ -179,18 +179,17 @@ public class AuthorServiceImple implements AuthorService {
         return authorDto;
     }
 
-    // @Override
-    // public Set<AuthorDto> allworkByconference(Integer conference_id) {
-    // Conference conference = this.conferenceRepo.findById(conference_id)
-    // .orElseThrow(() -> new ResourceNotFoundException("Conference", "id",
-    // conference_id));
-    // Set<AuthorDto> authorDtos = new HashSet<>();
-    // for (Authors author : conference.getAuthor()) {
-    // AuthorDto authorDto = this.entityTodto(author);
-    // authorDto.setAuthorWorkDto(this.entityTodto(author.getAuthorWork()));
-    // authorDtos.add(authorDto);
-    // }
-    // return authorDtos;
-    // }
+    @Override
+    public Set<AuthorDto> allworkByconference(Integer conference_id) {
+        Conference conference = this.conferenceRepo.findById(conference_id)
+                .orElseThrow(() -> new ResourceNotFoundException("Conference", "id", conference_id));
+        Set<AuthorDto> authorDtos = new HashSet<>();
+        for (Authors author : conference.getAuthor()) {
+            AuthorDto authorDto = this.entityTodto(author);
+            authorDto.setAuthorWorkDto(this.entityTodto(author.getAuthorWork()));
+            authorDtos.add(authorDto);
+        }
+        return authorDtos;
+    }
 
 }
