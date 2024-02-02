@@ -57,6 +57,7 @@ public class Conference {
   // "conference_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
   // private Set<Users> attendees;
 
+<<<<<<< HEAD
   // @ManyToMany(mappedBy = "conferences")
   // private Set<Users> user;
 
@@ -64,6 +65,10 @@ public class Conference {
   // @JoinTable(name = "conference_user", joinColumns = @JoinColumn(name =
   // "conference_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
   // private Set<Users> user = new HashSet<>();
+=======
+  @ManyToMany(mappedBy = "conferences")
+  private Set<Users> user;
+>>>>>>> parent of 3a6811c (bad)
 
   @OneToMany(mappedBy = "conference", cascade = CascadeType.ALL, orphanRemoval = true)
   private Set<Authors> author;
