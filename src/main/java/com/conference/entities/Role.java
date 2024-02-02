@@ -29,7 +29,7 @@ public class Role {
     // @OneToMany(mappedBy = "role", cascade = CascadeType.ALL, fetch =
     // FetchType.LAZY)
     // private List<Users> user = new ArrayList<>();
-    @ManyToMany(mappedBy = "roles")
-    private Set<Users> users;
+    // @ManyToMany(mappedBy = "roles")
+    // private Set<Users> users;
 
 }

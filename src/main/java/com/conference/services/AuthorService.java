@@ -16,5 +16,5 @@ public interface AuthorService {
 
     AuthorDto CreateNewAuthor(AuthorDto authorDto);
 
-    Set<AuthorDto> allworkByconference(Integer conference_id);
+    // Set<AuthorDto> allworkByconference(Integer conference_id);
 }

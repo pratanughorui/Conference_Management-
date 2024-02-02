@@ -34,7 +34,7 @@ public class UserDto {
     @Email(message = "email address is not valid")
     private String email;
     private Set<Conference> conferences;
-    private Set<RoleDto> roles;
+    // private Set<RoleDto> roles;
     // private RoleDto role;
     // private ConferenceDto conference;
 }

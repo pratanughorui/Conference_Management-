@@ -149,7 +149,8 @@ public class UserServiceImple implements UserService {
                 // TODO Auto-generated method stub
                 Users user = this.userRepo.findById(user_id)
                                 .orElseThrow(() -> new ResourceNotFoundException("Users", "id", user_id));
-                this.userRepo.delete(user);
+                this.userRepo.deleteById(user_id);
+
                 // throw new UnsupportedOperationException("Unimplemented method 'deleteUser'");
         }
 
