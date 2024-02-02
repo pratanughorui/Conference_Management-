@@ -59,10 +59,11 @@ public class AuthorsController {
         return new ResponseEntity<AuthorDto>(newauthorDto, HttpStatus.OK);
     }
 
-    @GetMapping("/getallauthorwork/{conference_id}")
-    public Set<AuthorDto> getallauthorwork(@PathVariable Integer conference_id) {
-        Set<AuthorDto> work_list = this.authorService.allworkByconference(conference_id);
-        return work_list;
-    }
+    // @GetMapping("/getallauthorwork/{conference_id}")
+    // public Set<AuthorDto> getallauthorwork(@PathVariable Integer conference_id) {
+    // Set<AuthorDto> work_list =
+    // this.authorService.allworkByconference(conference_id);
+    // return work_list;
+    // }
 
 }
