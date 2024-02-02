@@ -47,10 +47,9 @@ public class Users {
   // @ManyToMany(mappedBy = "user")
   // private Set<Conference> conferences = new HashSet<>();
 
-  // @ManyToMany
-  // @JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"),
-  // inverseJoinColumns = @JoinColumn(name = "role_id"))
-  // private Set<Role> roles;
+  @ManyToMany
+  @JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
+  private Set<Role> roles;
 
   // @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
   // private Author_Work authorWork;

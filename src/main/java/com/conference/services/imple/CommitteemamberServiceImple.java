@@ -38,57 +38,56 @@ public class CommitteemamberServiceImple implements CommitteemamberService {
 
     @Override
     public void CreateCommitteeMember(UserDto userDto) {
-        // String conference_name = userDto.getConference_name();
-        // // System.out.println("hisisisisiissi");
-        // Users existingUser = this.userRepo.findByEmail(userDto.getEmail());
-        // if (existingUser != null) {
-        // // Set<Role> existingRoles = existingUser.getRoles();
-        // // Role newRole = this.roleRepo.findByRole_name("Programme Committee");
-        // Set<Conference> existingConferences = existingUser.getConferences();
-        // Conference conference =
-        // this.conferenceRepo.findByConference_name(conference_name);
-        // if (/* existingRoles.contains(newRole) && */
-        // existingConferences.contains(conference)) {
-        // // handle this error
-        // throw new DataIntegrityViolationException("User already has the specified
-        // role");
-        // } else {
-        // existingConferences.add(conference);
-        // existingUser.setConferences(existingConferences);
-        // // existingRoles.add(newRole);
-        // // existingUser.setRoles(existingRoles);
-        // Users x = this.userRepo.save(existingUser);
-        // Set<Users> u = conference.getUser();
-        // u.add(x);
-        // conference.setUser(u);
-        // this.conferenceRepo.save(conference);
-
-        // }
-
-        // } else {
-        // Users newuser = this.dtoTouser(userDto);
-        // // Set<Role> role = this.roleRepo.findByAllRole_name("Programme Committee");
-        // Set<Conference> conference =
-        // this.conferenceRepo.findByAllConference_name(conference_name);
-        // newuser.setConferences(conference);
-        // // newuser.setRoles(role);
-        // this.userRepo.save(newuser);
-
-        // }
+        String conference_name = userDto.getConference_name();
+        // System.out.println("hisisisisiissi");
         Users existingUser = this.userRepo.findByEmail(userDto.getEmail());
-        Conference conference = this.conferenceRepo.findByConference_name(userDto.getConference_name());
         if (existingUser != null) {
-            // User already exists, handle accordingly
-            existingUser.getConferences().add(conference);
-            this.userRepo.save(existingUser);
+            Set<Role> existingRoles = existingUser.getRoles();
+            Role newRole = this.roleRepo.findByRole_name("Programme Committee");
+            Set<Conference> existingConferences = existingUser.getConferences();
+            Conference conference = this.conferenceRepo.findByConference_name(conference_name);
+            if (existingRoles.contains(newRole) &&
+                    existingConferences.contains(conference)) {
+                // handle this error
+                throw new DataIntegrityViolationException("User already has the specified role");
+            } else {
+                existingConferences.add(conference);
+                existingUser.setConferences(existingConferences);
+                existingRoles.add(newRole);
+                existingUser.setRoles(existingRoles);
+                Users x = this.userRepo.save(existingUser);
+                Set<Users> u = conference.getUser();
+                u.add(x);
+                conference.setUser(u);
+                this.conferenceRepo.save(conference);
+
+            }
+
         } else {
-            Users newUser = this.dtoTouser(userDto);
-            // Set other user details from userDto
-
-            newUser.getConferences().add(conference);
-
-            this.userRepo.save(newUser);
+            Users newuser = this.dtoTouser(userDto);
+            Set<Role> role = this.roleRepo.findByAllRole_name("Programme Committee");
+            Set<Conference> conference = this.conferenceRepo.findByAllConference_name(conference_name);
+            newuser.setConferences(conference);
+            newuser.setRoles(role);
+            this.userRepo.save(newuser);
         }
+
+        // }
+        // Users existingUser = this.userRepo.findByEmail(userDto.getEmail());
+        // Conference conference =
+        // this.conferenceRepo.findByConference_name(userDto.getConference_name());
+        // if (existingUser != null) {
+        // // User already exists, handle accordingly
+        // existingUser.getConferences().add(conference);
+        // this.userRepo.save(existingUser);
+        // } else {
+        // Users newUser = this.dtoTouser(userDto);
+        // // Set other user details from userDto
+
+        // newUser.getConferences().add(conference);
+
+        // this.userRepo.save(newUser);
+        // }
 
     }
 
