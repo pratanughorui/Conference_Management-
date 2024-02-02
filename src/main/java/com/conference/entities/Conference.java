@@ -68,8 +68,8 @@ public class Conference {
   // = true)
   // private Set<Authors> author;
 
-  // @OneToMany(mappedBy = "conference", cascade = CascadeType.ALL)
-  // private List<Track> tracks;
+  @OneToMany(mappedBy = "conference", cascade = CascadeType.REMOVE)
+  private List<Track> tracks;
 
   // public void setauthor_Works(Author_Work author_Work) {
   // this.author_Works.add(author_Work);
