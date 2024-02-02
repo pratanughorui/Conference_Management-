@@ -11,11 +11,13 @@ import org.springframework.stereotype.Service;
 
 import com.conference.entities.Author_Work;
 import com.conference.entities.Conference;
+import com.conference.entities.ConferenceUser;
 import com.conference.entities.Users;
 import com.conference.payloads.AuthorWorkDto;
 import com.conference.payloads.ConferenceDto;
 import com.conference.payloads.UserDto;
 import com.conference.repositories.ConferenceRepo;
+import com.conference.repositories.Conference_UserRepo;
 import com.conference.services.ConferenceService;
 import com.conference.exceptions.ResourceNotFoundException;
 
@@ -25,6 +27,9 @@ public class ConferenceServiceImple implements ConferenceService {
     private ConferenceRepo conferenceRepo;
     @Autowired
     private ModelMapper modelMapper;
+
+    @Autowired
+    private Conference_UserRepo conference_UserRepo;
 
     @Override
     public ConferenceDto createConference(ConferenceDto conferenceDto) {
@@ -82,9 +87,18 @@ public class ConferenceServiceImple implements ConferenceService {
 
     @Override
     public void deleteConference(Integer conference_id) {
-        Conference conference = this.conferenceRepo.findById(conference_id)
-                .orElseThrow(() -> new ResourceNotFoundException("Conference", "id", conference_id));
-        this.conferenceRepo.delete(conference);
+        // this.conferenceRepo.findById(conference_id)
+        // .orElseThrow(() -> new ResourceNotFoundException("Conference", "id",
+        // conference_id));
+        // delete conference_user row
+        Set<ConferenceUser> conferenceUser = this.conference_UserRepo.findByAllConference_id(conference_id);
+        if (conferenceUser != null) {
+            System.out.println("dfdf");
+            this.conference_UserRepo.deleteByAllConference_id(conference_id);
+        }
+
+        this.conferenceRepo.deleteById(conference_id);
+
     }
 
     @Override

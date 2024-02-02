@@ -40,13 +40,12 @@ public class Users {
   // @JoinColumn(name = "conference_id")
   // private Conference conference;
 
-  // @ManyToMany
-  // @JoinTable(name = "conference_user", joinColumns = @JoinColumn(name =
-  // "user_id"), inverseJoinColumns = @JoinColumn(name = "conference_id"))
-  // private Set<Conference> conferences;
+  @ManyToMany
+  @JoinTable(name = "conference_user", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "conference_id"))
+  private Set<Conference> conferences = new HashSet<>();
 
-  @ManyToMany(mappedBy = "user")
-  private Set<Conference> conferences;
+  // @ManyToMany(mappedBy = "user")
+  // private Set<Conference> conferences = new HashSet<>();
 
   // @ManyToMany
   // @JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"),

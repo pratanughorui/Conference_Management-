@@ -56,12 +56,13 @@ public class Conference {
   // "conference_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
   // private Set<Users> attendees;
 
-  // @ManyToMany(mappedBy = "conferences")
-  // private Set<Users> user;
+  @ManyToMany(mappedBy = "conferences")
+  private Set<Users> user = new HashSet<>();
 
-  @ManyToMany
-  @JoinTable(name = "conference_user", joinColumns = @JoinColumn(name = "conference_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
-  private Set<Users> user;
+  // @ManyToMany
+  // @JoinTable(name = "conference_user", joinColumns = @JoinColumn(name =
+  // "conference_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
+  // private Set<Users> user = new HashSet<>();
 
   // @OneToMany(mappedBy = "conference", cascade = CascadeType.ALL, orphanRemoval
   // = true)
