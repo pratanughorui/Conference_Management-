@@ -34,9 +34,9 @@ public class ConferenceServiceImple implements ConferenceService {
     @Override
     public ConferenceDto createConference(ConferenceDto conferenceDto) {
         // System.out.println("pratanu");
-        Conference conference = this.dtoToentity(conferenceDto);
+        Conference conference = this.modelMapper.map(conferenceDto, Conference.class);
         Conference savedconference = this.conferenceRepo.save(conference);
-        return this.entityTodto(savedconference);
+        return this.modelMapper.map(savedconference, ConferenceDto.class);
     }
 
     public ConferenceDto entityTodto(Conference conference) {
@@ -44,10 +44,10 @@ public class ConferenceServiceImple implements ConferenceService {
         conferenceDto.setClose_date(conference.getClose_date());
         conferenceDto.setConference_id(conference.getConference_id());
         conferenceDto.setConferences_name(conference.getConferences_name());
-        conferenceDto.setOrganization_name(conference.getOrganization_name());
+
         conferenceDto.setStart_date(conference.getStart_date());
         conferenceDto.setSubject(conference.getSubject());
-        conferenceDto.setTrack(conference.getTrack());
+
         conferenceDto.setVenue(conference.getVenue());
         // conferenceDto.setAuthor_Works(null);
         // conferenceDto.setUser(null);
@@ -60,10 +60,8 @@ public class ConferenceServiceImple implements ConferenceService {
         conference.setClose_date(conferenceDto.getClose_date());
         conference.setConference_id(conferenceDto.getConference_id());
         conference.setConferences_name(conferenceDto.getConferences_name());
-        conference.setOrganization_name(conferenceDto.getOrganization_name());
         conference.setStart_date(conferenceDto.getStart_date());
         conference.setSubject(conferenceDto.getSubject());
-        conference.setTrack(conferenceDto.getTrack());
         conference.setVenue(conferenceDto.getVenue());
         // conference.setAuthor_Works(null);
         conference.setUser(null);
@@ -76,10 +74,8 @@ public class ConferenceServiceImple implements ConferenceService {
                 .orElseThrow(() -> new ResourceNotFoundException("Conference", "id", conference_id));
         conference.setConferences_name(conferenceDto.getConferences_name());
         conference.setClose_date(conferenceDto.getClose_date());
-        conference.setOrganization_name(conferenceDto.getOrganization_name());
         conference.setStart_date(conferenceDto.getStart_date());
         conference.setSubject(conferenceDto.getSubject());
-        conference.setTrack(conferenceDto.getTrack());
         conference.setVenue(conferenceDto.getVenue());
         Conference updatedconference = this.conferenceRepo.save(conference);
         return this.modelMapper.map(updatedconference, ConferenceDto.class);

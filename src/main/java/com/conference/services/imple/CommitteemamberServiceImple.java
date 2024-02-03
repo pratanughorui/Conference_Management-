@@ -12,6 +12,7 @@ import com.conference.config.AppConstants;
 import com.conference.entities.Conference;
 import com.conference.entities.Role;
 import com.conference.entities.Users;
+import com.conference.exceptions.ResourceNotFoundException;
 import com.conference.payloads.ConferenceDto;
 import com.conference.payloads.RoleDto;
 import com.conference.payloads.UserDto;
@@ -46,6 +47,9 @@ public class CommitteemamberServiceImple implements CommitteemamberService {
             Role newRole = this.roleRepo.findByRole_name("Programme Committee");
             Set<Conference> existingConferences = existingUser.getConferences();
             Conference conference = this.conferenceRepo.findByConference_name(conference_name);
+            if (conference == null) {
+                throw new ResourceNotFoundException("Conference", "conference_name: " + conference_name, 1);
+            }
             if (existingRoles.contains(newRole) &&
                     existingConferences.contains(conference)) {
                 // handle this error
@@ -67,6 +71,9 @@ public class CommitteemamberServiceImple implements CommitteemamberService {
             Users newuser = this.dtoTouser(userDto);
             Set<Role> role = this.roleRepo.findByAllRole_name("Programme Committee");
             Set<Conference> conference = this.conferenceRepo.findByAllConference_name(conference_name);
+            if (conference.isEmpty()) {
+                throw new ResourceNotFoundException("Conference", "conference_name: " + conference_name, 1);
+            }
             newuser.setConferences(conference);
             newuser.setRoles(role);
             this.userRepo.save(newuser);

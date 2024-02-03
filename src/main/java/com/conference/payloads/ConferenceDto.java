@@ -23,13 +23,11 @@ public class ConferenceDto {
     private String conferences_name;
 
     @NotEmpty
-    private String organization_name;
-
-    @NotEmpty
     private String subject;
-
     @NotEmpty
-    private String track;
+    private String place;
+    @NotEmpty
+    private String country;;
 
     @NotEmpty
     private String venue;
