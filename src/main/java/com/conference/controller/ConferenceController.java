@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -33,8 +34,13 @@ public class ConferenceController {
 
     @PostMapping("/createConference/")
     public ResponseEntity<ConferenceDto> createConference(@Valid @RequestBody ConferenceDto conferenceDto) {
-        ConferenceDto createConferenceDto = this.conferenceService.createConference(conferenceDto);
-        return new ResponseEntity<ConferenceDto>(createConferenceDto, HttpStatus.CREATED);
+        try {
+            ConferenceDto createConferenceDto = this.conferenceService.createConference(conferenceDto);
+            return new ResponseEntity<ConferenceDto>(createConferenceDto, HttpStatus.CREATED);
+        } catch (DataIntegrityViolationException ex) {
+            // TODO: handle exception
+            throw new DataIntegrityViolationException("conference in already created");
+        }
     }
 
     @PutMapping("/updateConference/{conference_id}")
@@ -63,13 +69,11 @@ public class ConferenceController {
         return ResponseEntity.ok(this.conferenceService.getConferenceById(conference_id));
     }
 
-    // @GetMapping("/getallusersbyconference/{conference_id}")
-    // public Set<UserDto> getallusersbyconference(@PathVariable Integer
-    // conference_id) {
-    // Set<UserDto> ans =
-    // this.conferenceService.GetAllUsersByConference(conference_id);
-    // return ans;
-    // }
+    @GetMapping("/getallusersbyconference/{conference_id}")
+    public Set<UserDto> getallusersbyconference(@PathVariable Integer conference_id) {
+        Set<UserDto> ans = this.conferenceService.GetAllUsersByConference(conference_id);
+        return ans;
+    }
 
     // @GetMapping("/getauth/{conference_id}")
     // public Set<Author_Work> getauth(@PathVariable Integer conference_id) {

@@ -19,7 +19,7 @@ public interface ConferenceService {
 
     ConferenceDto getConferenceById(Integer conference_id);
 
-    // public Set<UserDto> GetAllUsersByConference(Integer conference_id);
+    public Set<UserDto> GetAllUsersByConference(Integer conference_id);
 
     // Set<Author_Work> getauth(Integer conference_id);
 

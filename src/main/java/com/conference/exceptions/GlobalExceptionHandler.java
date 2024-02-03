@@ -38,7 +38,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ResponseEntity<ApiResponse> HandleDataIntegrityViolationException(
             DataIntegrityViolationException ex) {
-        String message = "Duplicate entry or integrity violation.";
+        String message = ex.getMessage();
         ApiResponse apiResponse = new ApiResponse(message, false);
         return new ResponseEntity<ApiResponse>(apiResponse, HttpStatus.CONFLICT);
     }

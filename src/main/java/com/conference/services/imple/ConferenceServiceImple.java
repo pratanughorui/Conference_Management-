@@ -110,18 +110,17 @@ public class ConferenceServiceImple implements ConferenceService {
         return conferenceDto;
     }
 
-    // @Override
-    // public Set<UserDto> GetAllUsersByConference(Integer conference_id) {
-    // Conference conference = this.conferenceRepo.findById(conference_id)
-    // .orElseThrow(() -> new ResourceNotFoundException("Conference", "id",
-    // conference_id));
-    // Set<Users> user = conference.getAttendees();
-    // Set<UserDto> userDto = user.stream().map(con -> new
-    // UserServiceImple().userTodto(con))
-    // .collect(Collectors.toSet());
-    // return userDto;
+    @Override
+    public Set<UserDto> GetAllUsersByConference(Integer conference_id) {
+        Conference conference = this.conferenceRepo.findById(conference_id)
+                .orElseThrow(() -> new ResourceNotFoundException("Conference", "id",
+                        conference_id));
+        Set<Users> user = conference.getUser();
+        Set<UserDto> userDto = user.stream().map(con -> this.modelMapper.map(con, UserDto.class))
+                .collect(Collectors.toSet());
+        return userDto;
 
-    // }
+    }
 
     // public ConferenceDto entityTodto(Conference conference) {
     // ConferenceDto conferenceDto = new ConferenceDto();
