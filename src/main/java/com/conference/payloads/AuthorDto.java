@@ -22,7 +22,7 @@ public class AuthorDto {
     private String password;
     @NotEmpty
     private String mobile;
-    private String conference_title;
+    private String conference_name;
     @NotEmpty
     private String email;
     private ConferenceDto conference;

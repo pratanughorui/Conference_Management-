@@ -27,13 +27,13 @@ public class UserDto {
     @NotEmpty
     private String mobile;
 
-    private String conference_title;
+    private String conference_name;
     // @NotEmpty
     // private String user_type;
     @NotEmpty
     @Email(message = "email address is not valid")
     private String email;
-    // private Set<Conference> conferences;
+    private Set<Conference> conferences;
     // private Set<RoleDto> roles;
     // private RoleDto role;
     // private ConferenceDto conference;

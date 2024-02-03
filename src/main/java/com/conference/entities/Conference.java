@@ -33,10 +33,10 @@ public class Conference {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private int conference_id;
   @Column(unique = true)
-  private String conferences_title;
+  private String conferences_name;
+  private String organization_name;
   private String subject;
-  private String place;
-  private String country;
+  private String track;
   private String venue;
   private String start_date;
   private String close_date;

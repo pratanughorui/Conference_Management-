@@ -22,7 +22,7 @@ public class TrackServiceImple implements TrackService {
 
     @Override
     public Boolean saveTrack(List<String> trackNames, String conference_name) {
-        Conference conference = this.conferenceRepo.findByConference_title(conference_name);
+        Conference conference = this.conferenceRepo.findByConference_name(conference_name);
         if (conference == null) {
             return false;
         }

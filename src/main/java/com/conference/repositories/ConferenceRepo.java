@@ -10,8 +10,8 @@ import com.conference.entities.Conference;
 
 public interface ConferenceRepo extends JpaRepository<Conference, Integer> {
     @Query("SELECT c FROM Conference c WHERE c.conferences_name = :conferenceName")
-    Conference findByConference_title(@Param("conferenceName") String conference_name);
+    Conference findByConference_name(@Param("conferenceName") String conference_name);
 
     @Query("SELECT c FROM Conference c WHERE c.conferences_name = :conferenceName")
-    Set<Conference> findByAllConference_title(@Param("conferenceName") String conference_name);
+    Set<Conference> findByAllConference_name(@Param("conferenceName") String conference_name);
 }

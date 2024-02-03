@@ -20,15 +20,20 @@ public class ConferenceDto {
     private int conference_id;
 
     @NotEmpty
-    private String conferences_title;
+    private String conferences_name;
+
+    @NotEmpty
+    private String organization_name;
+
     @NotEmpty
     private String subject;
+
+    @NotEmpty
+    private String track;
+
     @NotEmpty
     private String venue;
-    @NotEmpty
-    private String place;
-    @NotEmpty
-    private String country;
+
     @NotEmpty
     private String start_date;
 
