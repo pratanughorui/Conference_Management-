@@ -38,14 +38,14 @@ public class CommitteemamberServiceImple implements CommitteemamberService {
 
     @Override
     public void CreateCommitteeMember(UserDto userDto) {
-        String conference_name = userDto.getConference_name();
+        String conference_name = userDto.getConference_title();
         // System.out.println("hisisisisiissi");
         Users existingUser = this.userRepo.findByEmail(userDto.getEmail());
         if (existingUser != null) {
             Set<Role> existingRoles = existingUser.getRoles();
             Role newRole = this.roleRepo.findByRole_name("Programme Committee");
             Set<Conference> existingConferences = existingUser.getConferences();
-            Conference conference = this.conferenceRepo.findByConference_name(conference_name);
+            Conference conference = this.conferenceRepo.findByConference_title(conference_name);
             if (existingRoles.contains(newRole) &&
                     existingConferences.contains(conference)) {
                 // handle this error
@@ -66,7 +66,7 @@ public class CommitteemamberServiceImple implements CommitteemamberService {
         } else {
             Users newuser = this.dtoTouser(userDto);
             Set<Role> role = this.roleRepo.findByAllRole_name("Programme Committee");
-            Set<Conference> conference = this.conferenceRepo.findByAllConference_name(conference_name);
+            Set<Conference> conference = this.conferenceRepo.findByAllConference_title(conference_name);
             newuser.setConferences(conference);
             newuser.setRoles(role);
             this.userRepo.save(newuser);

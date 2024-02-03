@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -15,9 +16,11 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.handler.HandlerExceptionResolverComposite;
 
 import com.conference.entities.Author_Work;
 import com.conference.entities.Users;
+import com.conference.payloads.ApiResponse;
 import com.conference.payloads.AuthorWorkDto;
 import com.conference.payloads.ConferenceDto;
 import com.conference.payloads.UserDto;
@@ -33,8 +36,13 @@ public class ConferenceController {
 
     @PostMapping("/createConference/")
     public ResponseEntity<ConferenceDto> createConference(@Valid @RequestBody ConferenceDto conferenceDto) {
-        ConferenceDto createConferenceDto = this.conferenceService.createConference(conferenceDto);
-        return new ResponseEntity<ConferenceDto>(createConferenceDto, HttpStatus.CREATED);
+        try {
+            ConferenceDto createConferenceDto = this.conferenceService.createConference(conferenceDto);
+            return new ResponseEntity<ConferenceDto>(createConferenceDto, HttpStatus.CREATED);
+        } catch (DataIntegrityViolationException ex) {
+            throw new DataIntegrityViolationException("Conference is already created");
+
+        }
     }
 
     @PutMapping("/updateConference/{conference_id}")
@@ -63,13 +71,11 @@ public class ConferenceController {
         return ResponseEntity.ok(this.conferenceService.getConferenceById(conference_id));
     }
 
-    // @GetMapping("/getallusersbyconference/{conference_id}")
-    // public Set<UserDto> getallusersbyconference(@PathVariable Integer
-    // conference_id) {
-    // Set<UserDto> ans =
-    // this.conferenceService.GetAllUsersByConference(conference_id);
-    // return ans;
-    // }
+    @GetMapping("/getallusersbyconference/{conference_id}")
+    public Set<UserDto> getallusersbyconference(@PathVariable Integer conference_id) {
+        Set<UserDto> ans = this.conferenceService.GetAllUsersByConference(conference_id);
+        return ans;
+    }
 
     // @GetMapping("/getauth/{conference_id}")
     // public Set<Author_Work> getauth(@PathVariable Integer conference_id) {

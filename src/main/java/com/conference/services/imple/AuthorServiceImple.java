@@ -126,8 +126,8 @@ public class AuthorServiceImple implements AuthorService {
 
     @Override
     public AuthorDto CreateNewAuthor(AuthorDto authorDto) {
-        String conference_name = authorDto.getConference_name();
-        Conference conferences = this.conferenceRepo.findByConference_name(conference_name);
+        String conference_name = authorDto.getConference_title();
+        Conference conferences = this.conferenceRepo.findByConference_title(conference_name);
         if (conferences == null) {
             return null;
         }
