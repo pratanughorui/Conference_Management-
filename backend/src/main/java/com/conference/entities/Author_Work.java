@@ -10,6 +10,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -22,13 +23,29 @@ import lombok.Setter;
 public class Author_Work {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int work_id;
+    private int author_id;
+    private String conference_name;
+
+    private String name;
+    private String address;
+
+    private String city;
+
+    private String state;
+
+    private String cont_no;
+
+    private String email;
+
     private String track;
+
     private String key_words;
-    private String pdf_name;
-    @Column(name = "abstract_text")
+
     private String abstractText;
-    private int status;
+    //
+    // private MultipartFile pdfFile;
+
+    private String pdf_name;
     // @ManyToOne
     // @JoinColumn(name = "conference_id", referencedColumnName = "conference_id")
     // private Conference conference;
@@ -42,8 +59,8 @@ public class Author_Work {
     // @ManyToOne
     // @JoinColumn(name = "author_id")
     // private Authors author;
-    @OneToOne
-    @JoinColumn(name = "author_id", unique = true)
-    private Authors author;
+    // @OneToOne
+    // @JoinColumn(name = "author_id", unique = true)
+    // private Authors author;
 
 }

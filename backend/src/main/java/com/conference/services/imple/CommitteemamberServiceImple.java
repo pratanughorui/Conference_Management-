@@ -53,7 +53,7 @@ public class CommitteemamberServiceImple implements CommitteemamberService {
             if (existingRoles.contains(newRole) &&
                     existingConferences.contains(conference)) {
                 // handle this error
-                throw new DataIntegrityViolationException("User already has the specified role");
+                throw new DataIntegrityViolationException("User already has the specified role in the same conference");
             } else {
                 existingConferences.add(conference);
                 existingUser.setConferences(existingConferences);

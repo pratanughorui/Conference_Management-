@@ -45,26 +45,29 @@ public class AuthorServiceImple implements AuthorService {
     private ConferenceRepo conferenceRepo;
 
     @Override
-    public AuthorWorkDto CreateAuthorWork(AuthorWorkDto authorWorkDto, Integer author_id) {
+    public AuthorWorkDto CreateAuthorWork(AuthorWorkDto authorWorkDto) {
         // TODO Auto-generated method stub
 
-        Authors author = this.authorRepo.findById(author_id)
-                .orElseThrow(() -> new ResourceNotFoundException("Users", "id", author_id));
+        // Authors author = this.authorRepo.findById(author_id)
+        // .orElseThrow(() -> new ResourceNotFoundException("Users", "id", author_id));
         // Conference conference =
         // this.conferenceRepo.findByConference_name(authorWorkDto.getConference_name());
         // if (conference == null) {
         // return null;
         // }
-        Author_Work author_Work = this.dtoToentity(authorWorkDto);
+        Author_Work author_Work = this.modelMapper.map(authorWorkDto, Author_Work.class);
         // set author into author_work
-        author_Work.setAuthor(author);
+        // author_Work.setAuthor(author);
         // set conference into author_work
         // author_Work.setConference(conference);
         // get pdf name and modify
+        Author_Work createdauthorwork = this.authorWorkRepo.save(author_Work);
+        int author_id = createdauthorwork.getAuthor_id();
         String pdfname = author_Work.getPdf_name();
         String filename = Integer.toString(author_id).concat(pdfname.substring(pdfname.lastIndexOf(".")));
         // set pdfname into author_work
         author_Work.setPdf_name(filename);
+        createdauthorwork = this.authorWorkRepo.save(author_Work);
         // Set<Author_Work> aw = new HashSet<>();
         // aw.add(author_Work);
         // set author_work in to conference
@@ -76,28 +79,27 @@ public class AuthorServiceImple implements AuthorService {
         // set author_work into author
         // author.setauthor_Works(author_Work);
         // author = this.authorRepo.save(author);
-        Author_Work createdauthorwork = this.authorWorkRepo.save(author_Work);
 
-        return this.entityTodto(createdauthorwork);
+        return this.modelMapper.map(createdauthorwork, AuthorWorkDto.class);
         // throw new UnsupportedOperationException("Unimplemented method
         // 'CreateAuthorWork'");
     }
 
     public Author_Work dtoToentity(AuthorWorkDto authorWorkDto) {
         Author_Work author_Work = new Author_Work();
-        author_Work.setWork_id(authorWorkDto.getWork_id());
+        // author_Work.setWork_id(authorWorkDto.getWork_id());
         author_Work.setAbstractText(authorWorkDto.getAbstractText());
 
         author_Work.setTrack(authorWorkDto.getTrack());
-        author_Work.setPdf_name(authorWorkDto.getPdf_name());
+        // author_Work.setPdf_name(authorWorkDto.getPdf_name());
         author_Work.setKey_words(authorWorkDto.getKey_words());
         return author_Work;
     }
 
     public AuthorWorkDto entityTodto(Author_Work author_Work) {
         AuthorWorkDto authorWorkDto = new AuthorWorkDto();
-        authorWorkDto.setWork_id(author_Work.getWork_id());
-        authorWorkDto.setPdf_name(author_Work.getPdf_name());
+        // authorWorkDto.setWork_id(author_Work.getWork_id());
+        // authorWorkDto.setPdf_name(author_Work.getPdf_name());
         authorWorkDto.setAbstractText(author_Work.getAbstractText());
         authorWorkDto.setKey_words(author_Work.getKey_words());
 

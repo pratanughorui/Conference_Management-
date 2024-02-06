@@ -40,8 +40,9 @@ public class Authors {
     @JoinColumn(name = "conference_id")
     private Conference conference;
 
-    @OneToOne(mappedBy = "author", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Author_Work authorWork;
+    // @OneToOne(mappedBy = "author", cascade = CascadeType.ALL, orphanRemoval =
+    // true)
+    // private Author_Work authorWork;
     // @OneToMany(mappedBy = "author", cascade = CascadeType.ALL)
     // private Set<Author_Work> author_Works = new HashSet<>();
 
