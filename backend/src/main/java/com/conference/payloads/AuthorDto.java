@@ -17,14 +17,15 @@ public class AuthorDto {
     private String name;
     private String address;
     @NotEmpty
+    private String city;
+    private String state;
     private String password;
     @NotEmpty
-    private String mobile;
-    private String conference_name;
+    private String contactNumber;
     @NotEmpty
     private String email;
-    private ConferenceDto conference;
-    private AuthorWorkDto authorWorkDto;
+    // private ConferenceDto conference;
+    // private AuthorWorkDto authorWorkDto;
     // private Set<AuthorWorkDto> author_Works;
 
     // public void setauthor_Works(AuthorWorkDto author_Work) {
