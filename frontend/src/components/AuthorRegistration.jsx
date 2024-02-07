@@ -48,6 +48,7 @@ const AuthorRegistration = () => {
     const [abstract, setAbstract] = useState('');
     const [pdfFile, setPdfFile] = useState(null);
     const [completionMessage, setCompletionMessage] = useState('');
+    const [conferenceId, setConferenceId] = useState('');
     const [errors, setErrors] = useState({
       conferenceName: '',
       name: '',
@@ -85,7 +86,7 @@ const AuthorRegistration = () => {
     }
      const authorwork={conferenceName,name,address,city,state,contactNumber,email,track,keywords,abstract,pdfFile};
     
-     createAuthorWork(authorwork).then((Response)=>{
+     createAuthorWork(authorwork,conferenceId).then((Response)=>{
       console.log(Response.data);
       setCompletionMessage('Registration completed successfully!');
        // Reset all form fields
@@ -118,7 +119,14 @@ const AuthorRegistration = () => {
       //   // pdfFile,
       // });
     };
-  
+    const handleConferenceChange = (e) => {
+      const selectedConference = conference.find(conf => conf.conferences_title === e.target.value);
+      if (selectedConference) {
+
+        setConferenceId(selectedConference.conference_id);
+      }
+      setConferenceName(e.target.value);
+    };
     return (
         <div className="container mt-5">
         <div className="row justify-content-center">
@@ -136,7 +144,7 @@ const AuthorRegistration = () => {
                   <select
                     className={`form-select mb-3 ${errors.conferenceName ? 'is-invalid' : ''}`}
                     value={conferenceName}
-                    onChange={(e) => setConferenceName(e.target.value)}
+                    onChange={handleConferenceChange}
                   >
                     <option value="">Select Conference</option>
                     

@@ -42,6 +42,12 @@ public class Authors {
     @OneToMany(mappedBy = "authors", cascade = CascadeType.REMOVE)
     private List<Work> works;
 
+    @ManyToMany
+    @JoinTable(name = "conference_authors", joinColumns = {
+            @JoinColumn(name = "conference_id") }, inverseJoinColumns = {
+                    @JoinColumn(name = "author_id") })
+    private Set<Conference> conferences;
+
     // @ManyToOne
     // @JoinColumn(name = "conference_id")
     // private Conference conference;

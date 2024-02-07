@@ -10,7 +10,7 @@ import com.conference.payloads.AuthorDto;
 import com.conference.payloads.AuthorWorkDto;
 
 public interface AuthorService {
-    AuthorWorkDto CreateAuthorWork(AuthorWorkDto authorWorkDto);
+    AuthorWorkDto CreateAuthorWork(AuthorWorkDto authorWorkDto, Integer conference_id);
 
     void UploadFile(String path, String filename, MultipartFile file) throws IOException;
 

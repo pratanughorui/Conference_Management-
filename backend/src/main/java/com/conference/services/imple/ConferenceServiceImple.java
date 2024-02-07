@@ -9,7 +9,6 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.conference.entities.Author_Work;
 import com.conference.entities.Conference;
 import com.conference.entities.ConferenceUser;
 import com.conference.entities.Users;

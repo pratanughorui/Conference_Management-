@@ -37,9 +37,9 @@ public class AuthorsController {
     @Autowired
     private ObjectMapper objectMapper;
 
-    @PostMapping("/uploadwork")
+    @PostMapping("/uploadwork/{conference_id}")
     public ResponseEntity<?> UploadWork(@RequestParam("pdfFiles") MultipartFile files,
-            @RequestParam("name") String authorWorkDtoJson) throws IOException {
+            @RequestParam("name") String authorWorkDtoJson, @PathVariable Integer conference_id) throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
         AuthorWorkDto authorWorkDto = objectMapper.readValue(authorWorkDtoJson, AuthorWorkDto.class);
         // AuthorWorkDto authorWorkDto = objectMapper.readValue(authorWorks,
@@ -47,7 +47,7 @@ public class AuthorsController {
         String filename = files.getOriginalFilename();
         authorWorkDto.setPdf_name(filename);
         System.out.println(filename);
-        AuthorWorkDto at = this.authorService.CreateAuthorWork(authorWorkDto);
+        AuthorWorkDto at = this.authorService.CreateAuthorWork(authorWorkDto, conference_id);
         // if (at == null) {
         // return new ResponseEntity<>(Map.of("message", "Conference not available"),
         // HttpStatus.OK);

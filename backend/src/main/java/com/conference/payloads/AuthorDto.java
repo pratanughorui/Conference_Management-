@@ -3,8 +3,6 @@ package com.conference.payloads;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.conference.entities.Author_Work;
-
 import jakarta.validation.constraints.NotEmpty;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

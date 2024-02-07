@@ -74,6 +74,9 @@ public class Conference {
   @OneToMany(mappedBy = "conference", cascade = CascadeType.REMOVE)
   private List<Track> tracks;
 
+  @ManyToMany(mappedBy = "conferences")
+  private Set<Authors> authors;
+
   // public void setauthor_Works(Author_Work author_Work) {
   // this.author_Works.add(author_Work);
   // }

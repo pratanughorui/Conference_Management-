@@ -3,8 +3,6 @@ package com.conference.services;
 import java.util.List;
 import java.util.Set;
 
-import com.conference.entities.Author_Work;
-import com.conference.payloads.AuthorWorkDto;
 import com.conference.payloads.ConferenceDto;
 import com.conference.payloads.UserDto;
 

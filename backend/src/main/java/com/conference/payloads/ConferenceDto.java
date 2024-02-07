@@ -4,7 +4,6 @@ import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.conference.entities.Author_Work;
 import com.conference.entities.Users;
 
 import jakarta.validation.constraints.NotEmpty;

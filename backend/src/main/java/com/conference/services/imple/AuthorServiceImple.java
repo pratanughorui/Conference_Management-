@@ -12,13 +12,15 @@ import java.util.stream.Collectors;
 import java.util.List;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.conference.config.AppConstants;
-import com.conference.entities.Author_Work;
+
 import com.conference.entities.Authors;
 import com.conference.entities.Conference;
+import com.conference.entities.ConferenceAuthors;
 import com.conference.entities.Role;
 import com.conference.entities.Users;
 import com.conference.entities.Work;
@@ -28,8 +30,9 @@ import com.conference.payloads.AuthorWorkDto;
 import com.conference.payloads.ConferenceDto;
 import com.conference.payloads.UserDto;
 import com.conference.repositories.AuthorRepo;
-import com.conference.repositories.AuthorWorkRepo;
+
 import com.conference.repositories.ConferenceRepo;
+import com.conference.repositories.Conference_AuthorRepo;
 import com.conference.repositories.UserRepo;
 import com.conference.repositories.WorkRepo;
 import com.conference.services.AuthorService;
@@ -38,8 +41,7 @@ import com.conference.services.AuthorService;
 public class AuthorServiceImple implements AuthorService {
     @Autowired
     private UserRepo userRepo;
-    @Autowired
-    private AuthorWorkRepo authorWorkRepo;
+
     @Autowired
     private ModelMapper modelMapper;
     @Autowired
@@ -48,9 +50,11 @@ public class AuthorServiceImple implements AuthorService {
     private ConferenceRepo conferenceRepo;
     @Autowired
     private WorkRepo workRepo;
+    @Autowired
+    private Conference_AuthorRepo conference_AuthorRepo;
 
     @Override
-    public AuthorWorkDto CreateAuthorWork(AuthorWorkDto authorWorkDto) {
+    public AuthorWorkDto CreateAuthorWork(AuthorWorkDto authorWorkDto, Integer conference_id) {
         // TODO Auto-generated method stub
 
         // Authors author = this.authorRepo.findById(author_id)
@@ -60,42 +64,59 @@ public class AuthorServiceImple implements AuthorService {
         // if (conference == null) {
         // return null;
         // }
+        Conference conference = this.conferenceRepo.findById(conference_id)
+                .orElseThrow(() -> new ResourceNotFoundException("Conference", "id", conference_id));
+
         String email = authorWorkDto.getEmail();
         Authors author = this.authorRepo.getByEmial(email);
-        if (author == null) {
-            Authors authors = this.modelMapper.map(authorWorkDto, Authors.class);
-            // Authors savedauthor = this.authorRepo.save(authors);
-            Work work = this.modelMapper.map(authorWorkDto, Work.class);
-            work = this.workRepo.save(work);
-            if (work != null)
-                System.out.println("right");
-            String pdfname = authorWorkDto.getPdf_name();
-            String filename = Integer.toString(work.getWork_id())
-                    .concat(pdfname.substring(pdfname.lastIndexOf(".")));
-            work.setPdf_name(filename);
-            authorWorkDto.setPdf_name(filename);
-            // List<Work> workList = new ArrayList<>();
-            // workList.add(work);
-            // authors.setWorks(workList);
-            work.setAuthors(authors);
-            this.authorRepo.save(authors);
-            this.workRepo.save(work);
-        } else {
-            Work work = this.modelMapper.map(authorWorkDto, Work.class);
-            work = this.workRepo.save(work);
-            if (work != null)
-                System.out.println("right");
-            String pdfname = authorWorkDto.getPdf_name();
-            String filename = Integer.toString(work.getWork_id())
-                    .concat(pdfname.substring(pdfname.lastIndexOf(".")));
-            work.setPdf_name(filename);
-            authorWorkDto.setPdf_name(filename);
-            // List<Work> workList = author.getWorks();
-            // workList.add(work);
-            // author.setWorks(workList);
-            work.setAuthors(author);
-            this.workRepo.save(work);
+
+        if (author != null && conference.getAuthors().contains(author)) {
+            throw new DataIntegrityViolationException("This author is already associated with the conference");
         }
+
+        Work work = this.modelMapper.map(authorWorkDto, Work.class);
+        work = this.workRepo.save(work);
+
+        // Update PDF name
+        String pdfname = authorWorkDto.getPdf_name();
+        String filename = Integer.toString(work.getWork_id())
+                .concat(pdfname.substring(pdfname.lastIndexOf(".")));
+        work.setPdf_name(filename);
+        authorWorkDto.setPdf_name(filename);
+
+        if (author == null) {
+            author = this.modelMapper.map(authorWorkDto, Authors.class);
+        }
+
+        // Update author's works
+        work.setAuthors(author);
+
+        // Update author's conferences
+
+        // this.conferenceRepo.save(conference);
+
+        // Set<Conference> conferences = author.getConferences();
+        // if (conferences == null) {
+        // conferences = new HashSet<>();
+        // }
+        // conferences.add(conference);
+        // author.setConferences(conferences);
+        // Set<Authors> at = conference.getAuthors();
+        // if (at == null) {
+        // at = new HashSet<>();
+        // }
+        // at.add(author);
+        // conference.setAuthors(at);
+
+        ConferenceAuthors conferenceAuthors = new ConferenceAuthors();
+        conferenceAuthors.setAuthors(author);
+        conferenceAuthors.setConference(conference);
+        this.conference_AuthorRepo.save(conferenceAuthors);
+        System.out.println("dddd");
+
+        // Save author and work
+        this.authorRepo.save(author);
+        this.workRepo.save(work);
 
         return authorWorkDto;
         /*
@@ -131,31 +152,31 @@ public class AuthorServiceImple implements AuthorService {
          */
     }
 
-    public Author_Work dtoToentity(AuthorWorkDto authorWorkDto) {
-        Author_Work author_Work = new Author_Work();
-        // author_Work.setWork_id(authorWorkDto.getWork_id());
-        author_Work.setAbstractText(authorWorkDto.getAbstractText());
+    // public Author_Work dtoToentity(AuthorWorkDto authorWorkDto) {
+    // Author_Work author_Work = new Author_Work();
+    // // author_Work.setWork_id(authorWorkDto.getWork_id());
+    // author_Work.setAbstractText(authorWorkDto.getAbstractText());
 
-        author_Work.setTrack(authorWorkDto.getTrack());
-        // author_Work.setPdf_name(authorWorkDto.getPdf_name());
-        author_Work.setKey_words(authorWorkDto.getKey_words());
-        return author_Work;
-    }
+    // author_Work.setTrack(authorWorkDto.getTrack());
+    // // author_Work.setPdf_name(authorWorkDto.getPdf_name());
+    // author_Work.setKey_words(authorWorkDto.getKey_words());
+    // return author_Work;
+    // }
 
-    public AuthorWorkDto entityTodto(Author_Work author_Work) {
-        AuthorWorkDto authorWorkDto = new AuthorWorkDto();
-        // authorWorkDto.setWork_id(author_Work.getWork_id());
-        // authorWorkDto.setPdf_name(author_Work.getPdf_name());
-        authorWorkDto.setAbstractText(author_Work.getAbstractText());
-        authorWorkDto.setKey_words(author_Work.getKey_words());
+    // public AuthorWorkDto entityTodto(Author_Work author_Work) {
+    // AuthorWorkDto authorWorkDto = new AuthorWorkDto();
+    // // authorWorkDto.setWork_id(author_Work.getWork_id());
+    // // authorWorkDto.setPdf_name(author_Work.getPdf_name());
+    // authorWorkDto.setAbstractText(author_Work.getAbstractText());
+    // authorWorkDto.setKey_words(author_Work.getKey_words());
 
-        authorWorkDto.setTrack(author_Work.getTrack());
+    // authorWorkDto.setTrack(author_Work.getTrack());
 
-        // authorWorkDto.setAuthor(this.entityTodto(author_Work.getAuthor()));
-        // authorWorkDto.setConference(this.modelMapper.map(conference,
-        // ConferenceDto.class));
-        return authorWorkDto;
-    }
+    // // authorWorkDto.setAuthor(this.entityTodto(author_Work.getAuthor()));
+    // // authorWorkDto.setConference(this.modelMapper.map(conference,
+    // // ConferenceDto.class));
+    // return authorWorkDto;
+    // }
 
     @Override
     public void UploadFile(String path, String filename, MultipartFile file) {

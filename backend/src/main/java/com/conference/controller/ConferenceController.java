@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.conference.entities.Author_Work;
 import com.conference.entities.Users;
 import com.conference.payloads.AuthorWorkDto;
 import com.conference.payloads.ConferenceDto;
