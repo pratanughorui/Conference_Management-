@@ -14,7 +14,7 @@ public interface AuthorService {
 
     void UploadFile(String path, String filename, MultipartFile file) throws IOException;
 
-    AuthorDto CreateNewAuthor(AuthorDto authorDto);
+    // AuthorDto CreateNewAuthor(AuthorDto authorDto);
 
     // Set<AuthorDto> allworkByconference(Integer conference_id);
 }

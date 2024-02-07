@@ -41,11 +41,11 @@ public class ConferenceServiceImple implements ConferenceService {
 
     public ConferenceDto entityTodto(Conference conference) {
         ConferenceDto conferenceDto = new ConferenceDto();
-        conferenceDto.setClose_date(conference.getClose_date());
+        conferenceDto.setFromDate(conference.getFromDate());
         conferenceDto.setConference_id(conference.getConference_id());
-        conferenceDto.setConferences_name(conference.getConferences_name());
+        conferenceDto.setConferences_title(conference.getConferences_title());
 
-        conferenceDto.setStart_date(conference.getStart_date());
+        conferenceDto.setToDate(conference.getToDate());
         conferenceDto.setSubject(conference.getSubject());
 
         conferenceDto.setVenue(conference.getVenue());
@@ -57,14 +57,14 @@ public class ConferenceServiceImple implements ConferenceService {
 
     public Conference dtoToentity(ConferenceDto conferenceDto) {
         Conference conference = new Conference();
-        conference.setClose_date(conferenceDto.getClose_date());
+        conference.setToDate(conferenceDto.getToDate());
         conference.setConference_id(conferenceDto.getConference_id());
-        conference.setConferences_name(conferenceDto.getConferences_name());
-        conference.setStart_date(conferenceDto.getStart_date());
+        conference.setConferences_title(conferenceDto.getConferences_title());
+        conference.setFromDate(conferenceDto.getFromDate());
         conference.setSubject(conferenceDto.getSubject());
         conference.setVenue(conferenceDto.getVenue());
         // conference.setAuthor_Works(null);
-        conference.setUser(null);
+        // conference.setUser(null);
         return conference;
     }
 
@@ -72,9 +72,9 @@ public class ConferenceServiceImple implements ConferenceService {
     public ConferenceDto updateConference(ConferenceDto conferenceDto, Integer conference_id) {
         Conference conference = this.conferenceRepo.findById(conference_id)
                 .orElseThrow(() -> new ResourceNotFoundException("Conference", "id", conference_id));
-        conference.setConferences_name(conferenceDto.getConferences_name());
-        conference.setClose_date(conferenceDto.getClose_date());
-        conference.setStart_date(conferenceDto.getStart_date());
+        conference.setConferences_title(conferenceDto.getConferences_title());
+        conference.setToDate(conferenceDto.getToDate());
+        conference.setFromDate(conferenceDto.getFromDate());
         conference.setSubject(conferenceDto.getSubject());
         conference.setVenue(conferenceDto.getVenue());
         Conference updatedconference = this.conferenceRepo.save(conference);
@@ -106,17 +106,18 @@ public class ConferenceServiceImple implements ConferenceService {
         return conferenceDto;
     }
 
-    @Override
-    public Set<UserDto> GetAllUsersByConference(Integer conference_id) {
-        Conference conference = this.conferenceRepo.findById(conference_id)
-                .orElseThrow(() -> new ResourceNotFoundException("Conference", "id",
-                        conference_id));
-        Set<Users> user = conference.getUser();
-        Set<UserDto> userDto = user.stream().map(con -> this.modelMapper.map(con, UserDto.class))
-                .collect(Collectors.toSet());
-        return userDto;
+    // @Override
+    // public Set<UserDto> GetAllUsersByConference(Integer conference_id) {
+    // Conference conference = this.conferenceRepo.findById(conference_id)
+    // .orElseThrow(() -> new ResourceNotFoundException("Conference", "id",
+    // conference_id));
+    // Set<Users> user = conference.getUser();
+    // Set<UserDto> userDto = user.stream().map(con -> this.modelMapper.map(con,
+    // UserDto.class))
+    // .collect(Collectors.toSet());
+    // return userDto;
 
-    }
+    // }
 
     // public ConferenceDto entityTodto(Conference conference) {
     // ConferenceDto conferenceDto = new ConferenceDto();
@@ -144,6 +145,16 @@ public class ConferenceServiceImple implements ConferenceService {
                 .orElseThrow(() -> new ResourceNotFoundException("Conference", "id", conference_id));
         return this.modelMapper.map(conference, ConferenceDto.class);
 
+    }
+
+    @Override
+    public List<ConferenceDto> getAllConferenceBtwDate() {
+        LocalDateTime currentDate = LocalDateTime.now();
+        List<Conference> conferences = conferenceRepo.findAllConferencesBtwDate(currentDate);
+        List<ConferenceDto> conferenceDtos = conferences.stream().map(con -> this.modelMapper.map(con,
+                ConferenceDto.class))
+                .collect(Collectors.toList());
+        return conferenceDtos;
     }
 
     // @Override

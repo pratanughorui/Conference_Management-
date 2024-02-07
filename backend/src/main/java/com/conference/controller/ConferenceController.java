@@ -34,8 +34,8 @@ public class ConferenceController {
     @Autowired
     private ConferenceService conferenceService;
 
-    @PostMapping("/createConference/")
-    public ResponseEntity<ConferenceDto> createConference(@Valid @RequestBody ConferenceDto conferenceDto) {
+    @PostMapping("/createConference")
+    public ResponseEntity<ConferenceDto> createConference(@RequestBody ConferenceDto conferenceDto) {
         try {
             ConferenceDto createConferenceDto = this.conferenceService.createConference(conferenceDto);
             return new ResponseEntity<ConferenceDto>(createConferenceDto, HttpStatus.CREATED);
@@ -50,6 +50,12 @@ public class ConferenceController {
             @PathVariable Integer conference_id) {
         ConferenceDto updatedConferenceDto = this.conferenceService.updateConference(conferenceDto, conference_id);
         return new ResponseEntity<>(updatedConferenceDto, HttpStatus.CREATED);
+    }
+
+    @GetMapping("/getAllConferencebtwdate")
+    public List<ConferenceDto> getAllConferencebtwdate() {
+        List<ConferenceDto> allConference = this.conferenceService.getAllConferenceBtwDate();
+        return allConference;
     }
 
     @GetMapping("/getAllConference")
@@ -71,11 +77,13 @@ public class ConferenceController {
         return ResponseEntity.ok(this.conferenceService.getConferenceById(conference_id));
     }
 
-    @GetMapping("/getallusersbyconference/{conference_id}")
-    public Set<UserDto> getallusersbyconference(@PathVariable Integer conference_id) {
-        Set<UserDto> ans = this.conferenceService.GetAllUsersByConference(conference_id);
-        return ans;
-    }
+    // @GetMapping("/getallusersbyconference/{conference_id}")
+    // public Set<UserDto> getallusersbyconference(@PathVariable Integer
+    // conference_id) {
+    // Set<UserDto> ans =
+    // this.conferenceService.GetAllUsersByConference(conference_id);
+    // return ans;
+    // }
 
     // @GetMapping("/getauth/{conference_id}")
     // public Set<Author_Work> getauth(@PathVariable Integer conference_id) {

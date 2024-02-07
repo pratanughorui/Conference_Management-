@@ -36,9 +36,9 @@ public class Authors {
     @Column(unique = true)
     private String email;
 
-    @ManyToOne
-    @JoinColumn(name = "conference_id")
-    private Conference conference;
+    // @ManyToOne
+    // @JoinColumn(name = "conference_id")
+    // private Conference conference;
 
     // @OneToOne(mappedBy = "author", cascade = CascadeType.ALL, orphanRemoval =
     // true)

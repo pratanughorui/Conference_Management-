@@ -126,34 +126,37 @@ public class AuthorServiceImple implements AuthorService {
         }
     }
 
-    @Override
-    public AuthorDto CreateNewAuthor(AuthorDto authorDto) {
-        String conference_name = authorDto.getConference_name();
-        Conference conferences = this.conferenceRepo.findByConference_name(conference_name);
-        if (conferences == null) {
-            return null;
-        }
-
-        Authors author = this.dtoToentity(authorDto);
-        author.setConference(conferences);
-        Authors createdauthor = this.authorRepo.save(author);
-        return this.entityTodto(createdauthor);
-        // String conference_name = userDto.getConference_name();
-        // Users user = this.modelMapper.map(userDto, Users.class);
-        // user.setPassword(user.getPassword());
-        // Role role = this.roleRepo.findById(AppConstants.author).get();
-
-        // Set<Conference> conference =
-        // this.conferenceRepo.findByConference_name(conference_name);
-        // if (conference == null) {
-        // return null;
-        // }
-        // user.getRoles().add(role);
-        // user.setConferences(conference);
-        // Users newuser = this.userRepo.save(user);
-        // return this.modelMapper.map(newuser, UserDto.class);
-
-    }
+    /*
+     * @Override
+     * public AuthorDto CreateNewAuthor(AuthorDto authorDto) {
+     * String conference_name = authorDto.getConference_name();
+     * Conference conferences =
+     * this.conferenceRepo.findByConference_title(conference_name);
+     * if (conferences == null) {
+     * return null;
+     * }
+     * 
+     * Authors author = this.dtoToentity(authorDto);
+     * author.setConference(conferences);
+     * Authors createdauthor = this.authorRepo.save(author);
+     * return this.entityTodto(createdauthor);
+     * // String conference_name = userDto.getConference_name();
+     * // Users user = this.modelMapper.map(userDto, Users.class);
+     * // user.setPassword(user.getPassword());
+     * // Role role = this.roleRepo.findById(AppConstants.author).get();
+     * 
+     * // Set<Conference> conference =
+     * // this.conferenceRepo.findByConference_name(conference_name);
+     * // if (conference == null) {
+     * // return null;
+     * // }
+     * // user.getRoles().add(role);
+     * // user.setConferences(conference);
+     * // Users newuser = this.userRepo.save(user);
+     * // return this.modelMapper.map(newuser, UserDto.class);
+     * 
+     * }
+     */
 
     public Authors dtoToentity(AuthorDto authorDto) {
         Authors author = new Authors();
@@ -176,7 +179,8 @@ public class AuthorServiceImple implements AuthorService {
         authorDto.setMobile(authors.getMobile());
         authorDto.setName(authors.getName());
         authorDto.setPassword(authors.getPassword());
-        authorDto.setConference(new ConferenceServiceImple().entityTodto(authors.getConference()));
+        // authorDto.setConference(new
+        // ConferenceServiceImple().entityTodto(authors.getConference()));
         // authorDto.setAuthorWorkDto(this.entityTodto(au, authors));
         return authorDto;
     }

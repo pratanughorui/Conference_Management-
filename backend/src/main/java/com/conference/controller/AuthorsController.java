@@ -58,11 +58,12 @@ public class AuthorsController {
 
     }
 
-    @PostMapping("/createnewauthor")
-    public ResponseEntity<AuthorDto> createnewauthor(@RequestBody AuthorDto authorDto) {
-        AuthorDto newauthorDto = this.authorService.CreateNewAuthor(authorDto);
-        return new ResponseEntity<AuthorDto>(newauthorDto, HttpStatus.OK);
-    }
+    // @PostMapping("/createnewauthor")
+    // public ResponseEntity<AuthorDto> createnewauthor(@RequestBody AuthorDto
+    // authorDto) {
+    // AuthorDto newauthorDto = this.authorService.CreateNewAuthor(authorDto);
+    // return new ResponseEntity<AuthorDto>(newauthorDto, HttpStatus.OK);
+    // }
 
     // @GetMapping("/getallauthorwork/{conference_id}")
     // public Set<AuthorDto> getallauthorwork(@PathVariable Integer conference_id) {

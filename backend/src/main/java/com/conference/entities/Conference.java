@@ -19,6 +19,7 @@ import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -33,13 +34,15 @@ public class Conference {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private int conference_id;
   @Column(unique = true)
-  private String conferences_name;
+  private String conferences_title;
   private String subject;
   private String place;
   private String country;
   private String venue;
-  private String start_date;
-  private String close_date;
+
+  private String fromDate;
+
+  private String toDate;
   @CreationTimestamp // This annotation automatically populates the field with the current timestamp
                      // on entity creation
   @Column(name = "creation_date_time", updatable = false)
@@ -56,8 +59,8 @@ public class Conference {
   // "conference_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
   // private Set<Users> attendees;
 
-  @ManyToMany(mappedBy = "conferences")
-  private Set<Users> user = new HashSet<>();
+  // @ManyToMany(mappedBy = "conferences")
+  // private Set<Users> user = new HashSet<>();
 
   // @ManyToMany
   // @JoinTable(name = "conference_user", joinColumns = @JoinColumn(name =
