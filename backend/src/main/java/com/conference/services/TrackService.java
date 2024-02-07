@@ -6,5 +6,5 @@ import com.conference.entities.Conference;
 import com.conference.payloads.TrackDto;
 
 public interface TrackService {
-    Boolean saveTrack(List<String> trackNames, String conference_name);
+    void saveTrack(List<String> trackNames, Integer conference_id);
 }

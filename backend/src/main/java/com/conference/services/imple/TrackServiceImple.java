@@ -21,18 +21,16 @@ public class TrackServiceImple implements TrackService {
     private ConferenceRepo conferenceRepo;
 
     @Override
-    public Boolean saveTrack(List<String> trackNames, String conference_name) {
-        Conference conference = this.conferenceRepo.findByConference_title(conference_name);
-        if (conference == null) {
-            return false;
-        }
+    public void saveTrack(List<String> trackNames, Integer conference_id) {
+        Conference conference = this.conferenceRepo.findById(conference_id)
+                .orElseThrow(() -> new ResourceNotFoundException("Conference", "id", conference_id));
+
         for (String trackName : trackNames) {
             Track track = new Track();
             track.setTrack_name(trackName);
             track.setConference(conference);
             trackRepo.save(track);
         }
-        return true;
 
     }
 }

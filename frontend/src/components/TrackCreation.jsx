@@ -1,8 +1,9 @@
 import React,{useEffect,useState} from 'react'
-import { listConferenceBtwDate } from '../Services/ConferenceServices';
+import { createTracks, listConferenceBtwDate } from '../Services/ConferenceServices';
 
 const TrackCreation = () => {
-  const[conference,setConference]=useState([])
+  const[conference,setConference]=useState([]);
+  const [conferenceId, setConferenceId] = useState('');
   useEffect(()=>{
     fetchData();
    },[]);
@@ -32,6 +33,7 @@ const TrackCreation = () => {
   const [subject, setSubject] = useState('');
   const [tracks, setTracks] = useState([]);
   const [trackInput, setTrackInput] = useState('');
+  const [completionMessage, setCompletionMessage] = useState('');
   const [errors, setErrors] = useState({
     conferenceName: '',
     subject: ''
@@ -62,12 +64,20 @@ const TrackCreation = () => {
     if (Object.keys(newErrors).length > 0) {
       return;
     }
-
     // Form submission logic here
+    //const tracksdata={conferenceId,tracks};
+    
+    createTracks(conferenceId,tracks).then((Response)=>{
+      console.log(Response.data);
+      setCompletionMessage(Response.data);
+    }).catch((err)=>{
+      console.log(err);
+    })
     console.log({
       conferenceName,
       subject,
-      tracks
+      tracks,
+      conferenceId
     });
 
     // Reset form fields after submission
@@ -80,6 +90,7 @@ const TrackCreation = () => {
     const selectedConference = conference.find(conf => conf.conferences_title === e.target.value);
     if (selectedConference) {
       setSubject(selectedConference.subject);
+      setConferenceId(selectedConference.conference_id);
     }
     setConferenceName(e.target.value);
   };
@@ -90,6 +101,11 @@ const TrackCreation = () => {
         <div className="card">
           <div className="card-body">
             <h3 className="card-title text-center mb-4">Track Form</h3>
+            {completionMessage && (
+                <div className="alert alert-success" role="alert">
+                  {completionMessage}
+                </div>
+              )}
             <form onSubmit={handleFormSubmit}>
               <div className="mb-3">
                 <label className="form-label">Conference Name:</label>
