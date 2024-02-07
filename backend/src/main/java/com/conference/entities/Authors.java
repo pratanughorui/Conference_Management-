@@ -44,9 +44,9 @@ public class Authors {
 
     @ManyToMany
     @JoinTable(name = "conference_authors", joinColumns = {
-            @JoinColumn(name = "conference_id") }, inverseJoinColumns = {
-                    @JoinColumn(name = "author_id") })
-    private Set<Conference> conferences;
+            @JoinColumn(name = "author_id") }, inverseJoinColumns = {
+                    @JoinColumn(name = "conference_id") })
+    private Set<Conference> conferences = new HashSet<>();
 
     // @ManyToOne
     // @JoinColumn(name = "conference_id")

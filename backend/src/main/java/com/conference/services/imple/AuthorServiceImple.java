@@ -20,7 +20,6 @@ import com.conference.config.AppConstants;
 
 import com.conference.entities.Authors;
 import com.conference.entities.Conference;
-import com.conference.entities.ConferenceAuthors;
 import com.conference.entities.Role;
 import com.conference.entities.Users;
 import com.conference.entities.Work;
@@ -32,7 +31,6 @@ import com.conference.payloads.UserDto;
 import com.conference.repositories.AuthorRepo;
 
 import com.conference.repositories.ConferenceRepo;
-import com.conference.repositories.Conference_AuthorRepo;
 import com.conference.repositories.UserRepo;
 import com.conference.repositories.WorkRepo;
 import com.conference.services.AuthorService;
@@ -50,8 +48,6 @@ public class AuthorServiceImple implements AuthorService {
     private ConferenceRepo conferenceRepo;
     @Autowired
     private WorkRepo workRepo;
-    @Autowired
-    private Conference_AuthorRepo conference_AuthorRepo;
 
     @Override
     public AuthorWorkDto CreateAuthorWork(AuthorWorkDto authorWorkDto, Integer conference_id) {
@@ -66,57 +62,47 @@ public class AuthorServiceImple implements AuthorService {
         // }
         Conference conference = this.conferenceRepo.findById(conference_id)
                 .orElseThrow(() -> new ResourceNotFoundException("Conference", "id", conference_id));
-
         String email = authorWorkDto.getEmail();
         Authors author = this.authorRepo.getByEmial(email);
-
         if (author != null && conference.getAuthors().contains(author)) {
-            throw new DataIntegrityViolationException("This author is already associated with the conference");
+            throw new DataIntegrityViolationException("This author is already present");
         }
-
-        Work work = this.modelMapper.map(authorWorkDto, Work.class);
-        work = this.workRepo.save(work);
-
-        // Update PDF name
-        String pdfname = authorWorkDto.getPdf_name();
-        String filename = Integer.toString(work.getWork_id())
-                .concat(pdfname.substring(pdfname.lastIndexOf(".")));
-        work.setPdf_name(filename);
-        authorWorkDto.setPdf_name(filename);
-
         if (author == null) {
-            author = this.modelMapper.map(authorWorkDto, Authors.class);
+            Authors authors = this.modelMapper.map(authorWorkDto, Authors.class);
+            // Authors savedauthor = this.authorRepo.save(authors);
+            Work work = this.modelMapper.map(authorWorkDto, Work.class);
+            work = this.workRepo.save(work);
+            if (work != null)
+                System.out.println("right");
+            String pdfname = authorWorkDto.getPdf_name();
+            String filename = Integer.toString(work.getWork_id())
+                    .concat(pdfname.substring(pdfname.lastIndexOf(".")));
+            work.setPdf_name(filename);
+            authorWorkDto.setPdf_name(filename);
+            // List<Work> workList = new ArrayList<>();
+            // workList.add(work);
+            // authors.setWorks(workList);
+            work.setAuthors(authors);
+            authors.getConferences().add(conference);
+            this.authorRepo.save(authors);
+            this.workRepo.save(work);
+        } else {
+            Work work = this.modelMapper.map(authorWorkDto, Work.class);
+            work = this.workRepo.save(work);
+            if (work != null)
+                System.out.println("right");
+            String pdfname = authorWorkDto.getPdf_name();
+            String filename = Integer.toString(work.getWork_id())
+                    .concat(pdfname.substring(pdfname.lastIndexOf(".")));
+            work.setPdf_name(filename);
+            authorWorkDto.setPdf_name(filename);
+            // List<Work> workList = author.getWorks();
+            // workList.add(work);
+            // author.setWorks(workList);
+            author.getConferences().add(conference);
+            work.setAuthors(author);
+            this.workRepo.save(work);
         }
-
-        // Update author's works
-        work.setAuthors(author);
-
-        // Update author's conferences
-
-        // this.conferenceRepo.save(conference);
-
-        // Set<Conference> conferences = author.getConferences();
-        // if (conferences == null) {
-        // conferences = new HashSet<>();
-        // }
-        // conferences.add(conference);
-        // author.setConferences(conferences);
-        // Set<Authors> at = conference.getAuthors();
-        // if (at == null) {
-        // at = new HashSet<>();
-        // }
-        // at.add(author);
-        // conference.setAuthors(at);
-
-        ConferenceAuthors conferenceAuthors = new ConferenceAuthors();
-        conferenceAuthors.setAuthors(author);
-        conferenceAuthors.setConference(conference);
-        this.conference_AuthorRepo.save(conferenceAuthors);
-        System.out.println("dddd");
-
-        // Save author and work
-        this.authorRepo.save(author);
-        this.workRepo.save(work);
 
         return authorWorkDto;
         /*

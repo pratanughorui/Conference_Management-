@@ -75,7 +75,7 @@ public class Conference {
   private List<Track> tracks;
 
   @ManyToMany(mappedBy = "conferences")
-  private Set<Authors> authors;
+  private Set<Authors> authors = new HashSet<>();
 
   // public void setauthor_Works(Author_Work author_Work) {
   // this.author_Works.add(author_Work);
