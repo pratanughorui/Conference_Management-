@@ -5,11 +5,10 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
-import java.util.List;
+
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -23,7 +22,6 @@ import com.conference.entities.Conference;
 import com.conference.entities.ConferenceAuthors;
 import com.conference.entities.Role;
 import com.conference.entities.Users;
-import com.conference.entities.Work;
 import com.conference.exceptions.ResourceNotFoundException;
 import com.conference.payloads.AuthorDto;
 import com.conference.payloads.AuthorWorkDto;
@@ -34,7 +32,6 @@ import com.conference.repositories.AuthorRepo;
 import com.conference.repositories.ConferenceRepo;
 import com.conference.repositories.Conference_AuthorRepo;
 import com.conference.repositories.UserRepo;
-import com.conference.repositories.WorkRepo;
 import com.conference.services.AuthorService;
 
 @Service
@@ -48,10 +45,13 @@ public class AuthorServiceImple implements AuthorService {
     private AuthorRepo authorRepo;
     @Autowired
     private ConferenceRepo conferenceRepo;
+<<<<<<< HEAD
     @Autowired
     private WorkRepo workRepo;
     @Autowired
     private Conference_AuthorRepo conference_AuthorRepo;
+=======
+>>>>>>> parent of a85a451 (complete author section)
 
     @Override
     public AuthorWorkDto CreateAuthorWork(AuthorWorkDto authorWorkDto, Integer conference_id) {
@@ -64,6 +64,7 @@ public class AuthorServiceImple implements AuthorService {
         // if (conference == null) {
         // return null;
         // }
+<<<<<<< HEAD
         Conference conference = this.conferenceRepo.findById(conference_id)
                 .orElseThrow(() -> new ResourceNotFoundException("Conference", "id", conference_id));
 
@@ -150,6 +151,36 @@ public class AuthorServiceImple implements AuthorService {
          * // throw new UnsupportedOperationException("Unimplemented method
          * // 'CreateAuthorWork'");
          */
+=======
+        Author_Work author_Work = this.modelMapper.map(authorWorkDto, Author_Work.class);
+        // set author into author_work
+        // author_Work.setAuthor(author);
+        // set conference into author_work
+        // author_Work.setConference(conference);
+        // get pdf name and modify
+        Author_Work createdauthorwork = this.authorWorkRepo.save(author_Work);
+        int author_id = createdauthorwork.getAuthor_id();
+        String pdfname = author_Work.getPdf_name();
+        String filename = Integer.toString(author_id).concat(pdfname.substring(pdfname.lastIndexOf(".")));
+        // set pdfname into author_work
+        author_Work.setPdf_name(filename);
+        createdauthorwork = this.authorWorkRepo.save(author_Work);
+        // Set<Author_Work> aw = new HashSet<>();
+        // aw.add(author_Work);
+        // set author_work in to conference
+        // conference.setauthor_Works(author_Work);
+        // conference = this.conferenceRepo.save(conference);
+        // modelMapper.typeMap(Author_Work.class, AuthorWorkDto.class)
+        // .addMapping(src -> src.getConference().getConference_id(),
+        // AuthorWorkDto::setConference_name);
+        // set author_work into author
+        // author.setauthor_Works(author_Work);
+        // author = this.authorRepo.save(author);
+
+        return this.modelMapper.map(createdauthorwork, AuthorWorkDto.class);
+        // throw new UnsupportedOperationException("Unimplemented method
+        // 'CreateAuthorWork'");
+>>>>>>> parent of a85a451 (complete author section)
     }
 
     // public Author_Work dtoToentity(AuthorWorkDto authorWorkDto) {
@@ -230,9 +261,9 @@ public class AuthorServiceImple implements AuthorService {
         author.setAuthor_id(authorDto.getAuthor_id());
         author.setAddress(authorDto.getAddress());
         author.setEmail(authorDto.getEmail());
-        // author.setMobile(authorDto.getMobile());
+        author.setMobile(authorDto.getMobile());
         author.setName(authorDto.getName());
-        // author.setPassword(authorDto.getPassword());
+        author.setPassword(authorDto.getPassword());
         // author.setConference(new
         // ConferenceServiceImple().dtoToentity(authorDto.getConference()));
         return author;
@@ -243,9 +274,9 @@ public class AuthorServiceImple implements AuthorService {
         authorDto.setAuthor_id(authors.getAuthor_id());
         authorDto.setAddress(authors.getAddress());
         authorDto.setEmail(authors.getEmail());
-        // authorDto.setMobile(authors.getMobile());
+        authorDto.setMobile(authors.getMobile());
         authorDto.setName(authors.getName());
-        // authorDto.setPassword(authors.getPassword());
+        authorDto.setPassword(authors.getPassword());
         // authorDto.setConference(new
         // ConferenceServiceImple().entityTodto(authors.getConference()));
         // authorDto.setAuthorWorkDto(this.entityTodto(au, authors));
