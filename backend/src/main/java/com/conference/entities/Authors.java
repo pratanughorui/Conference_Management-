@@ -1,7 +1,6 @@
 package com.conference.entities;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import jakarta.persistence.CascadeType;
@@ -17,7 +16,6 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotEmpty;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -31,16 +29,12 @@ public class Authors {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int author_id;
-    private String conference_name;
     private String name;
     private String address;
-    private String city;
-    private String state;
-    private String cont_no;
+    private String password;
+    private String mobile;
     @Column(unique = true)
     private String email;
-    @OneToMany(mappedBy = "authors", cascade = CascadeType.REMOVE)
-    private List<Work> works;
 
     @ManyToMany
     @JoinTable(name = "conference_authors", joinColumns = {
