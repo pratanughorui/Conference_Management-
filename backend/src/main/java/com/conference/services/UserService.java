@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Set;
 
 public interface UserService {
-    // public UserDto createUser(UserDto userDto);
+    public UserDto createUser(UserDto userDto, Integer conference_id, Integer role_id);
 
     public UserDto updateUser(UserDto userDto, Integer user_id);
 

@@ -1,6 +1,7 @@
 package com.conference.services.imple;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -149,7 +150,9 @@ public class ConferenceServiceImple implements ConferenceService {
     @Override
     public List<ConferenceDto> getAllConferenceBtwDate() {
         LocalDateTime currentDate = LocalDateTime.now();
-        List<Conference> conferences = conferenceRepo.findAllConferencesBtwDate(currentDate);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        String now = currentDate.format(formatter);
+        List<Conference> conferences = conferenceRepo.findAllConferencesBtwDate(now);
         List<ConferenceDto> conferenceDtos = conferences.stream().map(con -> this.modelMapper.map(con,
                 ConferenceDto.class))
                 .collect(Collectors.toList());

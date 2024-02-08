@@ -21,3 +21,11 @@ export const createTracks=(conferenceId,tracks)=>{
   
   return axios.post(`http://localhost:9090/track/createtrack/${conferenceId}`,tracks);
 }
+//call all roles
+export const gellAllRoles=()=>axios.get('http://localhost:9090/role/getallrole');
+
+//create committee members
+
+export const createCommitteeMembers=(members,conference_id,role_id)=>{
+   return axios.post(`http://localhost:9090/user/createuser/${conference_id}/${role_id}`,members);
+}

@@ -38,43 +38,21 @@ public class UserServiceImple implements UserService {
         // @Autowired
         // private PasswordEncoder passwordEncoder;
 
-        // @Override
-        // public UserDto createUser(UserDto userDto) {
-        // // System.out.println(role_id + " " + conference_id);
-        // // Conference conference = this.conferenceRepo.findById(conference_id)
-        // // .orElseThrow(() -> new ResourceNotFoundException("Conference", "id",
-        // // conference_id));
-        // String user_type = userDto.getUser_type();
-        // String conference_name = userDto.getConference_name();
-        // System.out.println("hisisisisiissi");
-        // Users existingUser = this.userRepo.findByEmail(userDto.getEmail());
-        // if (existingUser != null) {
-        // Set<Role> existingRoles = existingUser.getRoles();
-        // Role newRole = this.roleRepo.findByRole_name(user_type);
-        // if (existingRoles.contains(newRole)) {
-        // // handle this error
-        // throw new DataIntegrityViolationException("User already has the specified
-        // role");
-        // } else {
-        // existingUser.getRoles().add(newRole);
-        // this.userRepo.save(existingUser);
-        // }
-        // return this.userTodto(existingUser);
-        // } else {
-        // Users newUser = this.dtoTouser(userDto);
-        // Set<Role> role = this.roleRepo.findByAllRole_name(user_type);
-        // Conference conferences =
-        // this.conferenceRepo.findByConference_name(conference_name);
-        // if (conferences == null) {
-        // return null;
-        // }
-        // newUser.setConference(conferences);
-        // newUser.setRoles(role);
-        // Users savedUser = this.userRepo.save(newUser);
-        // return this.userTodto(savedUser);
-        // }
-
-        // }
+        @Override
+        public UserDto createUser(UserDto userDto, Integer conference_id, Integer role_id) {
+                // Conference conference = this.conferenceRepo.findById(conference_id)
+                // .orElseThrow(() -> new ResourceNotFoundException("Conference", "id",
+                // conference_id));
+                Role role = this.roleRepo.findById(role_id)
+                                .orElseThrow(() -> new ResourceNotFoundException("role", "id", role_id));
+                // String email=userDto.getEmail();
+                // i have to create a condition later when i will merge between conference and
+                // user
+                Users user = this.modelMapper.map(userDto, Users.class);
+                user.getRoles().add(role);
+                Users savedsuser = this.userRepo.save(user);
+                return this.modelMapper.map(savedsuser, UserDto.class);
+        }
 
         public Users dtoTouser(UserDto userDto) {
                 Users user = new Users();

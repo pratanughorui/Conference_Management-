@@ -26,10 +26,8 @@ public class UserDto {
     private String password;
     @NotEmpty
     private String mobile;
-
+    private String roles;
     private String conference_name;
-    // @NotEmpty
-    // private String user_type;
     @NotEmpty
     @Email(message = "email address is not valid")
     private String email;

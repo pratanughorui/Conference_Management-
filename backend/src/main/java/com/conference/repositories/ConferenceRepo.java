@@ -17,6 +17,7 @@ public interface ConferenceRepo extends JpaRepository<Conference, Integer> {
     @Query("SELECT c FROM Conference c WHERE c.conferences_title = :conferenceTitle")
     Set<Conference> findByAllConference_Title(@Param("conferenceTitle") String conference_Title);
 
-    @Query("SELECT c FROM Conference c WHERE :currentDate BETWEEN c.creationDateTime and c.toDate")
-    List<Conference> findAllConferencesBtwDate(LocalDateTime currentDate);
+    // change required
+    @Query("SELECT c FROM Conference c WHERE :currentDate BETWEEN :currentDate and c.toDate")
+    List<Conference> findAllConferencesBtwDate(String currentDate);
 }

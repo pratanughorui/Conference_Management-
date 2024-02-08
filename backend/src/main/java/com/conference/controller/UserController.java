@@ -7,6 +7,7 @@ import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,21 +26,22 @@ import com.conference.services.UserService;
 import jakarta.validation.Valid;
 import lombok.val;
 
+@CrossOrigin("*")
 @RestController
 @RequestMapping("/user")
 public class UserController {
     @Autowired
     private UserService userService;
 
-    // @PostMapping("/createuser")
-    // public ResponseEntity<?> CreateUser(@Valid @RequestBody UserDto userDto) {
-    // UserDto createduser = this.userService.createUser(userDto);
-    // if (createduser == null) {
-    // return new ResponseEntity<>(Map.of("message", "Conference Not available"),
-    // HttpStatus.BAD_REQUEST);
-    // }
-    // return new ResponseEntity<UserDto>(createduser, HttpStatus.CREATED);
-    // }
+    @PostMapping("/createuser/{conference_id}/{role_id}")
+    public ResponseEntity<?> CreateUser(@RequestBody UserDto userDto, @PathVariable Integer conference_id,
+            @PathVariable Integer role_id) {
+        UserDto createduser = this.userService.createUser(userDto, conference_id, role_id);
+        if (createduser == null) {
+            return new ResponseEntity<>("Server problem", HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<UserDto>(createduser, HttpStatus.CREATED);
+    }
 
     // @GetMapping("/getallusers")
     // public List<UserDto> getAllUsers() {
