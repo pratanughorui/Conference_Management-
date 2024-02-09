@@ -1,5 +1,5 @@
 import React,{useEffect, useState} from 'react'
-import { createAuthorWork, listConference } from '../Services/ConferenceServices';
+import { createAuthorWork, listConference,listConferenceBtwDate } from '../Services/ConferenceServices';
 
 const AuthorRegistration = () => {
 
@@ -8,7 +8,7 @@ const AuthorRegistration = () => {
     fetchData();
    },[]);
     const fetchData = () => {
-      listConference().then((Response)=>{
+      listConferenceBtwDate().then((Response)=>{
         setConference(Response.data);
         console.log(Response.data);
       }).catch((err)=>{

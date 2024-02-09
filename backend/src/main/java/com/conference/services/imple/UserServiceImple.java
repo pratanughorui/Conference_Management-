@@ -1,5 +1,8 @@
 package com.conference.services.imple;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -40,18 +43,38 @@ public class UserServiceImple implements UserService {
 
         @Override
         public UserDto createUser(UserDto userDto, Integer conference_id, Integer role_id) {
-                // Conference conference = this.conferenceRepo.findById(conference_id)
-                // .orElseThrow(() -> new ResourceNotFoundException("Conference", "id",
-                // conference_id));
+                Conference conference = this.conferenceRepo.findById(conference_id)
+                                .orElseThrow(() -> new ResourceNotFoundException("Conference", "id",
+                                                conference_id));
                 Role role = this.roleRepo.findById(role_id)
                                 .orElseThrow(() -> new ResourceNotFoundException("role", "id", role_id));
-                // String email=userDto.getEmail();
+                String email = userDto.getEmail();
                 // i have to create a condition later when i will merge between conference and
                 // user
-                Users user = this.modelMapper.map(userDto, Users.class);
-                user.getRoles().add(role);
-                Users savedsuser = this.userRepo.save(user);
-                return this.modelMapper.map(savedsuser, UserDto.class);
+                Users existuser = this.userRepo.findByEmail(email);
+                if (existuser == null) {
+                        Users user = this.modelMapper.map(userDto, Users.class);
+                        user.getRoles().add(role);
+                        user.getConferences().add(conference);
+                        Users savedsuser = this.userRepo.save(user);
+                        return this.modelMapper.map(savedsuser, UserDto.class);
+                } else {
+                        if (conference.getUser().contains(existuser) && existuser.getRoles().contains(role)) {
+                                throw new DataIntegrityViolationException("this user is already exist");
+                        } else if (existuser.getRoles().contains(role)) {
+                                existuser.getConferences().add(conference);
+                        } else if (conference.getUser().contains(existuser)) {
+                                existuser.getRoles().add(role);
+                        } else {
+                                existuser.getConferences().add(conference);
+                                existuser.getRoles().add(role);
+
+                        }
+                        Users savedsuser = this.userRepo.save(existuser);
+                        return this.modelMapper.map(savedsuser, UserDto.class);
+
+                }
+
         }
 
         public Users dtoTouser(UserDto userDto) {
@@ -132,16 +155,31 @@ public class UserServiceImple implements UserService {
                 // throw new UnsupportedOperationException("Unimplemented method 'deleteUser'");
         }
 
-        // @Override
-        // public List<UserDto> getAllUser() {
-        // // TODO Auto-generated method stub
-        // List<Users> user = this.userRepo.findAll();
-        // List<UserDto> userDto = user.stream().map(con -> this.userTodto(con))
-        // .collect(Collectors.toList());
-        // return userDto;
-        // // throw new UnsupportedOperationException("Unimplemented method
-        // 'getAllUser'");
-        // }
+        @Override
+        public List<UserDto> getAllUser() {
+                // TODO Auto-generated method stub
+                // List<Users> user = this.userRepo.findAll();
+                // List<UserDto> userDto = user.stream().map(con ->
+                // this.userTodto(con)).collect(Collectors.toList());
+                return null;
+                // throw new UnsupportedOperationException("Unimplemented method 'getAllUser'");
+        }
+
+        @Override
+        public List<UserDto> getAllUserBeforeRecentDate() {
+                LocalDateTime currentDate = LocalDateTime.now();
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                String now = currentDate.format(formatter);
+                List<Conference> conferences = this.conferenceRepo.findAllConferencesBeforeDate(now);
+                List<Users> users = new ArrayList<>();
+                for (Conference c : conferences) {
+                        users.addAll(c.getUser());
+                }
+                List<UserDto> users2 = users.stream().map(con -> this.modelMapper.map(con, UserDto.class))
+                                .collect(Collectors.toList());
+                return users2;
+
+        }
 
         @Override
         public UserDto getUserById(Integer user_id) {

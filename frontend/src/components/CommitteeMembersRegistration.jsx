@@ -1,5 +1,5 @@
 import React,{useState,useEffect} from 'react'
-import { createAuthorWork, listConference,gellAllRoles,createCommitteeMembers } from '../Services/ConferenceServices';
+import { createAuthorWork, listConference,gellAllRoles,createCommitteeMembers,gellAllusersBeforDate,listConferenceBtwDate } from '../Services/ConferenceServices';
 
 const CommitteeMembersRegistration = () => {
 
@@ -12,7 +12,7 @@ const CommitteeMembersRegistration = () => {
    fetchRoles();
   },[]);
    const fetchconference = () => {
-     listConference().then((Response)=>{
+    listConferenceBtwDate().then((Response)=>{
        setConference(Response.data);
        console.log(Response.data);
      }).catch((err)=>{
@@ -66,8 +66,16 @@ const CommitteeMembersRegistration = () => {
      console.log(members);
      createCommitteeMembers(members,conferenceId,roleId).then((Response)=>{
          console.log(Response.data);
-     }).catch((err)=>{
-      console.log(err);
+     }).catch((error)=>{
+      if (error.response && error.response.data && error.response.data.message) {
+        // Access the error message from the response
+        const errorMessage = error.response.data.message;
+        console.log(errorMessage);
+        // Handle the error message as needed (e.g., display it to the user)
+      } else {
+        // If the error doesn't contain a specific message, log the entire error object
+        console.log(error);
+      }
      })
 
 
@@ -99,6 +107,33 @@ const CommitteeMembersRegistration = () => {
       }
       setRoleName(e.target.value);
     };
+    const clearFields = () => {
+      setName('');
+      setAddress('');
+      setPassword('');
+      setMobile('');
+      setConferenceName('');
+      setEmail('');
+      setRoleName('');
+  };
+  const getOldData=()=>{
+    gellAllusersBeforDate().then((Response)=>{
+      //  console.log(Response.data);
+      setMembers(Response.data);
+    }).catch((err)=>{
+      console.log(err);
+    });
+  }
+  const clearmembersTable=()=>{
+    setMembers([]);
+  }
+  const populateMemberForm = (member) => {
+    setName(member.name);
+    setAddress(member.address);
+    setPassword(member.password);
+    setMobile(member.mobile);
+    setEmail(member.email);
+};
   return (
     <div className="container mt-5">
     <div className="row">
@@ -112,16 +147,16 @@ const CommitteeMembersRegistration = () => {
             </tr>
           </thead>
           <tbody>
-            {/* Render members
             {members.map((member, index) => (
-              <tr key={index}>
+              <tr key={index} onClick={() => populateMemberForm(member)}>
                 <td>{member.email}</td>
                 <td>{member.name}</td>
               </tr>
-            ))} */}
+            ))}
           </tbody>
         </table>
-        <button className="btn btn-primary">Old Members</button>
+        <button className="btn btn-primary" onClick={getOldData}>Old Members</button>&nbsp;
+        <button type="button" className="btn btn-danger" onClick={clearmembersTable}>Clear</button>
       </div>
       <div className="col-md-6">
         <h2>Add Member</h2>
@@ -190,40 +225,12 @@ const CommitteeMembersRegistration = () => {
             <input type="email" className={`form-control ${errors.email ? 'is-invalid' : ''}`} id="email" value={email} onChange={(e) => setEmail(e.target.value)} />
             <div className="invalid-feedback">{errors.email}</div>
           </div>
-          <button type="submit" className="btn btn-primary">Submit</button>
+          <button type="submit" className="btn btn-primary">Submit</button> &nbsp;
+          <button type="button" className="btn btn-danger" onClick={clearFields}>Close</button>
         </form>
       </div>
     </div>
-    <div className="row mt-5">
-      <div className="col-md-12">
-        <h2>Members List</h2>
-        <table className="table">
-          <thead>
-            <tr>
-              <th scope="col">Name</th>
-              <th scope="col">Address</th>
-              <th scope="col">Password</th>
-              <th scope="col">Mobile</th>
-              <th scope="col">Conference Name</th>
-              <th scope="col">Email</th>
-            </tr>
-          </thead>
-          <tbody>
-            {/* Render members
-            {members.map((member, index) => (
-              <tr key={index}>
-                <td>{member.name}</td>
-                <td>{member.address}</td>
-                <td>{member.password}</td>
-                <td>{member.mobile}</td>
-                <td>{member.conferenceName}</td>
-                <td>{member.email}</td>
-              </tr>
-            ))} */}
-          </tbody>
-        </table>
-      </div>
-    </div>
+    
   </div>
   )
 }

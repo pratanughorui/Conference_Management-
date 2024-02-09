@@ -18,6 +18,11 @@ public interface ConferenceRepo extends JpaRepository<Conference, Integer> {
     Set<Conference> findByAllConference_Title(@Param("conferenceTitle") String conference_Title);
 
     // change required
-    @Query("SELECT c FROM Conference c WHERE :currentDate BETWEEN :currentDate and c.toDate")
+    // @Query("SELECT c FROM Conference c WHERE :currentDate BETWEEN " +
+    // "DATE_FORMAT(c.creationDateTime, '%Y-%m-%d %H:%i:%s') AND c.toDate")
+    @Query("SELECT c FROM Conference c WHERE :currentDate BETWEEN DATE_FORMAT(DATE(c.creationDateTimeAsString),'%Y-%m-%d') and c.toDate")
     List<Conference> findAllConferencesBtwDate(String currentDate);
+
+    @Query("SELECT c from Conference c where :currentDate>c.toDate")
+    List<Conference> findAllConferencesBeforeDate(@Param("currentDate") String currentDate);
 }

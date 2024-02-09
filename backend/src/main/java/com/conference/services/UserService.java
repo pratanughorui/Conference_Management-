@@ -12,7 +12,9 @@ public interface UserService {
 
     public void deleteUserById(Integer user_id);
 
-    // public List<UserDto> getAllUser();
+    public List<UserDto> getAllUser();
+
+    List<UserDto> getAllUserBeforeRecentDate();
 
     public UserDto getUserById(Integer user_id);
 

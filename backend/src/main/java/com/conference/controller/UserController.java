@@ -43,12 +43,19 @@ public class UserController {
         return new ResponseEntity<UserDto>(createduser, HttpStatus.CREATED);
     }
 
-    // @GetMapping("/getallusers")
-    // public List<UserDto> getAllUsers() {
-    // List<UserDto> userDto = this.userService.getAllUser();
-    // return userDto;
+    @GetMapping("/getallusers")
+    public List<UserDto> getAllUsers() {
+        List<UserDto> userDto = this.userService.getAllUser();
+        return userDto;
 
-    // }
+    }
+
+    @GetMapping("/getallusersbeforerecentdate")
+    public List<UserDto> getallusersbeforerecentdate() {
+        List<UserDto> userDto = this.userService.getAllUserBeforeRecentDate();
+        return userDto;
+
+    }
 
     // @GetMapping("/getallusersbyrole/{role_id}")
     // public List<UserDto> getAllUserByRole(@PathVariable Integer role_id) {

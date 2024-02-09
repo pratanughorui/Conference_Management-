@@ -1,6 +1,7 @@
 package com.conference.entities;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -19,6 +20,7 @@ import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -45,8 +47,34 @@ public class Conference {
   private String toDate;
   @CreationTimestamp // This annotation automatically populates the field with the current timestamp
                      // on entity creation
+
   @Column(name = "creation_date_time", updatable = false)
+  private String creationDateTimeAsString;
+
+  @CreationTimestamp
+  @Transient // This annotation prevents the field from being persisted to the database
   private LocalDateTime creationDateTime;
+
+  public String getCreationDateTimeAsString() {
+    if (creationDateTime != null) {
+      // Convert LocalDateTime to a string in the desired format
+      DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+      return creationDateTime.format(formatter);
+    } else {
+      return null;
+    }
+  }
+
+  public void setCreationDateTimeAsString(String creationDateTimeAsString) {
+    this.creationDateTimeAsString = creationDateTimeAsString;
+    if (creationDateTimeAsString != null) {
+      // Parse the string to LocalDateTime
+      DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+      this.creationDateTime = LocalDateTime.parse(creationDateTimeAsString, formatter);
+    } else {
+      this.creationDateTime = null;
+    }
+  }
   // @OneToMany(mappedBy = "conference", cascade = CascadeType.ALL)
   // private Set<Author_Work> author_Works = new HashSet<>();
 
@@ -59,8 +87,8 @@ public class Conference {
   // "conference_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
   // private Set<Users> attendees;
 
-  // @ManyToMany(mappedBy = "conferences")
-  // private Set<Users> user = new HashSet<>();
+  @ManyToMany(mappedBy = "conferences")
+  private List<Users> user = new ArrayList<>();
 
   // @ManyToMany
   // @JoinTable(name = "conference_user", joinColumns = @JoinColumn(name =

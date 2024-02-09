@@ -11,7 +11,7 @@ public interface ConferenceService {
 
     ConferenceDto updateConference(ConferenceDto conference, Integer conference_id);
 
-    void deleteConference(Integer conference_id);
+    // void deleteConference(Integer conference_id);
 
     List<ConferenceDto> getallConference();
 

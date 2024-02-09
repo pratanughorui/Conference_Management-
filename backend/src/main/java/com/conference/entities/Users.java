@@ -1,6 +1,8 @@
 package com.conference.entities;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import jakarta.persistence.CascadeType;
@@ -40,10 +42,9 @@ public class Users {
   // @JoinColumn(name = "conference_id")
   // private Conference conference;
 
-  // @ManyToMany
-  // @JoinTable(name = "conference_user", joinColumns = @JoinColumn(name =
-  // "user_id"), inverseJoinColumns = @JoinColumn(name = "conference_id"))
-  // private Set<Conference> conferences = new HashSet<>();
+  @ManyToMany
+  @JoinTable(name = "conference_user", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "conference_id"))
+  private List<Conference> conferences = new ArrayList<>();
 
   // @ManyToMany(mappedBy = "user")
   // private Set<Conference> conferences = new HashSet<>();

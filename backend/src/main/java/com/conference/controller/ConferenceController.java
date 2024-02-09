@@ -26,7 +26,6 @@ import com.conference.services.ConferenceService;
 
 import jakarta.validation.Valid;
 
-@CrossOrigin("*")
 @RestController
 @RequestMapping("/conference")
 public class ConferenceController {
@@ -63,11 +62,13 @@ public class ConferenceController {
         return allConference;
     }
 
-    @DeleteMapping("/deleteConference/{conference_id}")
-    public ResponseEntity<?> deleteConference(@PathVariable Integer conference_id) {
-        this.conferenceService.deleteConference(conference_id);
-        return new ResponseEntity<>(Map.of("message", "Conference Deleted Successfully"), HttpStatus.OK);
-    }
+    // @DeleteMapping("/deleteConference/{conference_id}")
+    // public ResponseEntity<?> deleteConference(@PathVariable Integer
+    // conference_id) {
+    // this.conferenceService.deleteConference(conference_id);
+    // return new ResponseEntity<>(Map.of("message", "Conference Deleted
+    // Successfully"), HttpStatus.OK);
+    // }
 
     @GetMapping("/getConference/{conference_id}")
     public ResponseEntity<ConferenceDto> getConference(@PathVariable Integer conference_id) {

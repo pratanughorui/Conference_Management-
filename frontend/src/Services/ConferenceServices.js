@@ -29,3 +29,7 @@ export const gellAllRoles=()=>axios.get('http://localhost:9090/role/getallrole')
 export const createCommitteeMembers=(members,conference_id,role_id)=>{
    return axios.post(`http://localhost:9090/user/createuser/${conference_id}/${role_id}`,members);
 }
+
+//fetch all users before recent date
+
+export const gellAllusersBeforDate=()=>axios.get('http://localhost:9090/user/getallusersbeforerecentdate');
