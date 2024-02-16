@@ -1,6 +1,7 @@
 package com.conference.controller;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -41,6 +42,7 @@ public class AuthorsController {
     public ResponseEntity<?> UploadWork(@RequestParam("pdfFiles") MultipartFile files,
             @RequestParam("name") String authorWorkDtoJson, @PathVariable Integer conference_id) throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
+        System.out.println("ddd");
         AuthorWorkDto authorWorkDto = objectMapper.readValue(authorWorkDtoJson, AuthorWorkDto.class);
         // AuthorWorkDto authorWorkDto = objectMapper.readValue(authorWorks,
         // AuthorWorkDto.class);
@@ -71,5 +73,11 @@ public class AuthorsController {
     // this.authorService.allworkByconference(conference_id);
     // return work_list;
     // }
+
+    @GetMapping("/getallauthors/{conference_id}")
+    public Set<AuthorWorkDto> getAllAuthors(@PathVariable Integer conference_id) {
+        Set<AuthorWorkDto> savedauthors = this.authorService.getallauthors(conference_id);
+        return savedauthors;
+    }
 
 }

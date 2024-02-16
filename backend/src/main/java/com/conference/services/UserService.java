@@ -6,7 +6,9 @@ import java.util.List;
 import java.util.Set;
 
 public interface UserService {
-    public UserDto createUser(UserDto userDto, Integer conference_id, Integer role_id);
+    public boolean createUser(List<UserDto> userDto, Integer conference_id);
+
+    public boolean createReviewer(List<UserDto> userDto, Integer conference_id);
 
     public UserDto updateUser(UserDto userDto, Integer user_id);
 
@@ -17,6 +19,8 @@ public interface UserService {
     List<UserDto> getAllUserBeforeRecentDate();
 
     public UserDto getUserById(Integer user_id);
+
+    List<UserDto> getallreviewers(Integer conference_id);
 
     // public List<UserDto> getAllUserByRole(Integer role_id);
     // public UserDto RegisterNewUser(UserDto userDto);

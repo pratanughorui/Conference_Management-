@@ -20,12 +20,14 @@ import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 @Entity
 @Table(name = "Users")
 @Getter
 @Setter
 @NoArgsConstructor
+@ToString
 public class Users {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,6 +36,9 @@ public class Users {
   private String address;
   // private String conference_name;
   // private String user_type;
+  private String place;
+  private String state;
+  private String country;
   private String password;
   private String mobile;
   @Column(unique = true)

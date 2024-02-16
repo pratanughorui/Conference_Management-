@@ -37,7 +37,7 @@ public class ConferenceDto {
     @NotEmpty
     private String toDate;
 
-    private LocalDateTime creationDateTime;
+    private String creationDateTimeAsString;
 
     // private Set<AuthorWorkDto> author_Works;
     // private Set<UserDto> user;

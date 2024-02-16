@@ -5,7 +5,7 @@ export const listConference=()=>axios.get(REST_API_BASE_URL);
 export const createAuthorWork = (authorwork,conferenceId) => {
      const formData = new FormData();
      formData.append("pdfFiles",authorwork.pdfFile);
-     var x=`{"conference_name":"${authorwork.conferenceName}","name":"${authorwork.name}","address":"${authorwork.address}","city":"${authorwork.city}","state":"${authorwork.state}","cont_no":"${authorwork.contactNumber}","email":"${authorwork.email}","track":"${authorwork.track}","key_words":"${authorwork.keywords}","abstractText":"${authorwork.abstract}"}`;
+     var x=`{"name":"${authorwork.name}","address":"${authorwork.address}","city":"${authorwork.city}","state":"${authorwork.state}","country":"${authorwork.country}","cont_no":"${authorwork.contactNumber}","email":"${authorwork.email}","title":"${authorwork.title}","track":"${authorwork.track}","key_words":"${authorwork.keywords}","abstractText":"${authorwork.abstract}"}`;
      formData.append("name",x);
     return axios.post(`http://localhost:9090/authors/uploadwork/${conferenceId}`,formData);
   };
@@ -26,10 +26,23 @@ export const gellAllRoles=()=>axios.get('http://localhost:9090/role/getallrole')
 
 //create committee members
 
-export const createCommitteeMembers=(members,conference_id,role_id)=>{
-   return axios.post(`http://localhost:9090/user/createuser/${conference_id}/${role_id}`,members);
+export const createCommitteeMembers=(members,conference_id)=>{
+   return axios.post(`http://localhost:9090/user/createuser/${conference_id}`,members);
+}
+export const createReviewers=(members,conference_id)=>{
+  return axios.post(`http://localhost:9090/Reviewer/createreviewer/${conference_id}`,members);
 }
 
 //fetch all users before recent date
 
 export const gellAllusersBeforDate=()=>axios.get('http://localhost:9090/user/getallusersbeforerecentdate');
+
+//fetch all authors using conferenceid
+export const gellAllAuthors=(conference_id)=>{
+  return axios.get(`http://localhost:9090/authors/getallauthors/${conference_id}`);
+}
+//fetch all reviewers using conferenceid
+export const gellAllReviewers=(conference_id)=>{
+  return axios.get(`http://localhost:9090/Reviewer/getallreviwers/${conference_id}`);
+}
+

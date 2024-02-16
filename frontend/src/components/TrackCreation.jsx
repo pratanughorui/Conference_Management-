@@ -1,22 +1,24 @@
 import React,{useEffect,useState} from 'react'
 import { createTracks, listConferenceBtwDate } from '../Services/ConferenceServices';
+import { useLoaderData } from 'react-router-dom';
 
 const TrackCreation = () => {
-  const[conference,setConference]=useState([]);
+  const data=useLoaderData();
+  const conference=data.data;
   const [conferenceId, setConferenceId] = useState('');
-  useEffect(()=>{
-    fetchData();
-   },[]);
-  const fetchData=()=>{
+  // useEffect(()=>{
+  //   fetchData();
+  //  },[]);
+  // const fetchData=()=>{
     
-    listConferenceBtwDate().then((Response)=>{
-     console.log(Response.data);
-     console.log(typeof Response.data);
-     setConference(Response.data);
-    }).catch((err)=>{
-      console.log(err);
-    })
-  }
+  //   listConferenceBtwDate().then((Response)=>{
+  //    console.log(Response.data);
+  //    console.log(typeof Response.data);
+  //    setConference(Response.data);
+  //   }).catch((err)=>{
+  //     console.log(err);
+  //   })
+  // }
 
 
 
@@ -53,11 +55,10 @@ const TrackCreation = () => {
   };
 
   const handleFormSubmit = (e) => {
+    console.log("fff");
     e.preventDefault();
 
     const newErrors = {};
-    if (!conferenceName.trim()) newErrors.conferenceName = 'Conference name is required.';
-    if (!subject.trim()) newErrors.subject = 'Subject is required.';
     if (tracks.length === 0) newErrors.tracks = 'At least one track is required.';
     setErrors(newErrors);
 
@@ -66,8 +67,7 @@ const TrackCreation = () => {
     }
     // Form submission logic here
     //const tracksdata={conferenceId,tracks};
-    
-    createTracks(conferenceId,tracks).then((Response)=>{
+    createTracks(conference.conference_id,tracks).then((Response)=>{
       console.log(Response.data);
       setCompletionMessage(Response.data);
     }).catch((err)=>{
@@ -95,19 +95,22 @@ const TrackCreation = () => {
     setConferenceName(e.target.value);
   };
   return (
+    <div>
+        <p className="text-start">Conference Name:{conference.conferences_title}</p>
+        <p className="text-start">Subject:{conference.subject}</p>
     <div className="container mt-5">
     <div className="row justify-content-center">
       <div className="col-md-6">
         <div className="card">
           <div className="card-body">
-            <h3 className="card-title text-center mb-4">Track Form</h3>
+            <h3 className="card-title text-center mb-4">Tracks</h3>
             {completionMessage && (
                 <div className="alert alert-success" role="alert">
                   {completionMessage}
                 </div>
               )}
             <form onSubmit={handleFormSubmit}>
-              <div className="mb-3">
+              {/* <div className="mb-3">
                 <label className="form-label">Conference Name:</label>
                 <select
                     className={`form-select mb-3 ${errors.conferenceName ? 'is-invalid' : ''}`}
@@ -124,8 +127,8 @@ const TrackCreation = () => {
                   }
                   </select>
                 <div className="invalid-feedback">{errors.conferenceName}</div>
-              </div>
-              <div className="mb-3">
+              </div> */}
+              {/* <div className="mb-3">
                 <label className="form-label">Subject:</label>
                 <input
                   type="text"
@@ -135,7 +138,7 @@ const TrackCreation = () => {
                   disabled
                 />
                 <div className="invalid-feedback">{errors.subject}</div>
-              </div>
+              </div> */}
               <div className="mb-3">
                 <label className="form-label">Tracks:</label>
                 <div className="input-group mb-3">
@@ -178,6 +181,7 @@ const TrackCreation = () => {
         </div>
       </div>
     </div>
+  </div>
   </div>
   )
 }

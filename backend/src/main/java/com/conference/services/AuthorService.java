@@ -1,6 +1,7 @@
 package com.conference.services;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Set;
 
 import org.springframework.web.multipart.MultipartFile;
@@ -14,6 +15,7 @@ public interface AuthorService {
 
     void UploadFile(String path, String filename, MultipartFile file) throws IOException;
 
+    Set<AuthorWorkDto> getallauthors(Integer conference_id);
     // AuthorDto CreateNewAuthor(AuthorDto authorDto);
 
     // Set<AuthorDto> allworkByconference(Integer conference_id);

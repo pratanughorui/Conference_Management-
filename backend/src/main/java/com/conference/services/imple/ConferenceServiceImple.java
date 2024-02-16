@@ -145,14 +145,12 @@ public class ConferenceServiceImple implements ConferenceService {
     }
 
     @Override
-    public List<ConferenceDto> getAllConferenceBtwDate() {
+    public ConferenceDto getAllConferenceBtwDate() {
         LocalDateTime currentDate = LocalDateTime.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         String now = currentDate.format(formatter);
-        List<Conference> conferences = conferenceRepo.findAllConferencesBtwDate(now);
-        List<ConferenceDto> conferenceDtos = conferences.stream().map(con -> this.modelMapper.map(con,
-                ConferenceDto.class))
-                .collect(Collectors.toList());
+        Conference conferences = conferenceRepo.findAllConferencesBtwDate(now);
+        ConferenceDto conferenceDtos = this.modelMapper.map(conferences, ConferenceDto.class);
         return conferenceDtos;
     }
 

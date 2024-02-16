@@ -33,14 +33,14 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @PostMapping("/createuser/{conference_id}/{role_id}")
-    public ResponseEntity<?> CreateUser(@RequestBody UserDto userDto, @PathVariable Integer conference_id,
-            @PathVariable Integer role_id) {
-        UserDto createduser = this.userService.createUser(userDto, conference_id, role_id);
-        if (createduser == null) {
-            return new ResponseEntity<>("Server problem", HttpStatus.BAD_REQUEST);
-        }
-        return new ResponseEntity<UserDto>(createduser, HttpStatus.CREATED);
+    @PostMapping("/createuser/{conference_id}")
+    public ResponseEntity<?> CreateUser(@RequestBody List<UserDto> userDto, @PathVariable Integer conference_id) {
+        this.userService.createUser(userDto, conference_id);
+        // if (createduser == null) {
+        // return new ResponseEntity<>("Server problem", HttpStatus.BAD_REQUEST);
+        // }
+
+        return new ResponseEntity<>("done", HttpStatus.CREATED);
     }
 
     @GetMapping("/getallusers")

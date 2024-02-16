@@ -51,9 +51,9 @@ public class ConferenceController {
     }
 
     @GetMapping("/getAllConferencebtwdate")
-    public List<ConferenceDto> getAllConferencebtwdate() {
-        List<ConferenceDto> allConference = this.conferenceService.getAllConferenceBtwDate();
-        return allConference;
+    public ConferenceDto getAllConferencebtwdate() {
+        ConferenceDto Conference = this.conferenceService.getAllConferenceBtwDate();
+        return Conference;
     }
 
     @GetMapping("/getAllConference")

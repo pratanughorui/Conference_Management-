@@ -1,24 +1,26 @@
-package com.conference.payloads;
+package com.conference.entities;
 
-import org.springframework.web.multipart.MultipartFile;
-
-import com.conference.entities.Authors;
-import com.conference.entities.Conference;
-import com.conference.entities.Users;
-
+import jakarta.annotation.Generated;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.validation.constraints.NotEmpty;
+import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 
-@NoArgsConstructor
+@Entity
+@Table(name = "authors_work")
 @Getter
 @Setter
-@ToString
-public class AuthorWorkDto {
+@NoArgsConstructor
+public class Authors_work {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int author_id;
     private String name;
     private String address;
@@ -32,10 +34,7 @@ public class AuthorWorkDto {
     private String key_words;
     private String abstractText;
     private String pdf_name;
-    // private Conference conferences;
-
-    // private int status;
-    // private ConferenceDto conference;
-    // private AuthorDto author;
-
+    @ManyToOne
+    @JoinColumn(name = "conference_id")
+    private Conference conferences;
 }

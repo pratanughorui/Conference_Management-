@@ -5,11 +5,13 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.security.SecurityProperties.User;
 import org.springframework.dao.DataIntegrityViolationException;
 //import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -42,39 +44,113 @@ public class UserServiceImple implements UserService {
         // private PasswordEncoder passwordEncoder;
 
         @Override
-        public UserDto createUser(UserDto userDto, Integer conference_id, Integer role_id) {
+        public boolean createUser(List<UserDto> userDto, Integer conference_id) {
                 Conference conference = this.conferenceRepo.findById(conference_id)
                                 .orElseThrow(() -> new ResourceNotFoundException("Conference", "id",
                                                 conference_id));
-                Role role = this.roleRepo.findById(role_id)
-                                .orElseThrow(() -> new ResourceNotFoundException("role", "id", role_id));
-                String email = userDto.getEmail();
-                // i have to create a condition later when i will merge between conference and
-                // user
-                Users existuser = this.userRepo.findByEmail(email);
-                if (existuser == null) {
-                        Users user = this.modelMapper.map(userDto, Users.class);
-                        user.getRoles().add(role);
-                        user.getConferences().add(conference);
-                        Users savedsuser = this.userRepo.save(user);
-                        return this.modelMapper.map(savedsuser, UserDto.class);
-                } else {
-                        if (conference.getUser().contains(existuser) && existuser.getRoles().contains(role)) {
-                                throw new DataIntegrityViolationException("this user is already exist");
-                        } else if (existuser.getRoles().contains(role)) {
-                                existuser.getConferences().add(conference);
-                        } else if (conference.getUser().contains(existuser)) {
-                                existuser.getRoles().add(role);
+                for (UserDto user : userDto) {
+                        String email = user.getEmail();
+                        Users existuser = this.userRepo.findByEmail(email);
+                        Role role = this.roleRepo.findByRole_name(user.getRoleName());
+                        if (existuser == null) {
+                                Users newuser = this.modelMapper.map(user, Users.class);
+                                System.out.println(newuser.toString());
+                                newuser.getRoles().add(role);
+                                newuser.getConferences().add(conference);
+
+                                this.userRepo.save(newuser);
                         } else {
-                                existuser.getConferences().add(conference);
-                                existuser.getRoles().add(role);
+                                if (conference.getUser().contains(existuser) &&
+                                                existuser.getRoles().contains(role)) {
+                                        throw new DataIntegrityViolationException("this user is already exist");
+                                } else if (existuser.getRoles().contains(role)) {
+                                        existuser.getConferences().add(conference);
+                                } else if (conference.getUser().contains(existuser)) {
+                                        existuser.getRoles().add(role);
+                                } else {
+                                        existuser.getConferences().add(conference);
+                                        existuser.getRoles().add(role);
+
+                                }
+                                this.userRepo.save(existuser);
 
                         }
-                        Users savedsuser = this.userRepo.save(existuser);
-                        return this.modelMapper.map(savedsuser, UserDto.class);
+
+                }
+                return true;
+
+                // Conference conference = this.conferenceRepo.findById(conference_id)
+                // .orElseThrow(() -> new ResourceNotFoundException("Conference", "id",
+                // conference_id));
+                // Role role = this.roleRepo.findById(role_id)
+                // .orElseThrow(() -> new ResourceNotFoundException("role", "id", role_id));
+                // String email = userDto.getEmail();
+                // // i have to create a condition later when i will merge between conference
+                // and
+                // // user
+                // Users existuser = this.userRepo.findByEmail(email);
+                // if (existuser == null) {
+                // Users user = this.modelMapper.map(userDto, Users.class);
+                // user.getRoles().add(role);
+                // user.getConferences().add(conference);
+                // Users savedsuser = this.userRepo.save(user);
+                // return this.modelMapper.map(savedsuser, UserDto.class);
+                // } else {
+                // if (conference.getUser().contains(existuser) &&
+                // existuser.getRoles().contains(role)) {
+                // throw new DataIntegrityViolationException("this user is already exist");
+                // } else if (existuser.getRoles().contains(role)) {
+                // existuser.getConferences().add(conference);
+                // } else if (conference.getUser().contains(existuser)) {
+                // existuser.getRoles().add(role);
+                // } else {
+                // existuser.getConferences().add(conference);
+                // existuser.getRoles().add(role);
+
+                // }
+                // Users savedsuser = this.userRepo.save(existuser);
+                // return this.modelMapper.map(savedsuser, UserDto.class);
+
+                // }
+
+        }
+
+        @Override
+        public boolean createReviewer(List<UserDto> userDto, Integer conference_id) {
+                Conference conference = this.conferenceRepo.findById(conference_id)
+                                .orElseThrow(() -> new ResourceNotFoundException("Conference", "id",
+                                                conference_id));
+                Role role = this.roleRepo.findById(505)
+                                .orElseThrow(() -> new ResourceNotFoundException("role", "id",
+                                                505));
+                for (UserDto user : userDto) {
+                        String email = user.getEmail();
+                        Users existuser = this.userRepo.findByEmail(email);
+                        if (existuser == null) {
+                                Users newuser = this.modelMapper.map(user, Users.class);
+                                newuser.getRoles().add(role);
+                                newuser.getConferences().add(conference);
+                                this.userRepo.save(newuser);
+                        } else {
+                                if (conference.getUser().contains(existuser) &&
+                                                existuser.getRoles().contains(role)) {
+                                        throw new DataIntegrityViolationException("this user is already exist");
+                                } else if (existuser.getRoles().contains(role)) {
+                                        existuser.getConferences().add(conference);
+                                } else if (conference.getUser().contains(existuser)) {
+                                        existuser.getRoles().add(role);
+                                } else {
+                                        existuser.getConferences().add(conference);
+                                        existuser.getRoles().add(role);
+
+                                }
+                                this.userRepo.save(existuser);
+
+                        }
 
                 }
 
+                return true;
         }
 
         public Users dtoTouser(UserDto userDto) {
@@ -190,6 +266,20 @@ public class UserServiceImple implements UserService {
                 return this.modelMapper.map(user, UserDto.class);
                 // throw new UnsupportedOperationException("Unimplemented method
                 // 'getUserById'");
+        }
+
+        @Override
+        public List<UserDto> getallreviewers(Integer conference_id) {
+                Conference conference = this.conferenceRepo.findById(conference_id)
+                                .orElseThrow(() -> new ResourceNotFoundException("Conference", "id",
+                                                conference_id));
+                List<Users> user = conference.getUser();
+                List<UserDto> reviewers = user.stream()
+                                .filter(users -> users.getRoles().stream().anyMatch(role -> role.getRole_id() == 505))
+                                .map(con -> this.modelMapper.map(con, UserDto.class))
+                                .collect(Collectors.toList());
+                return reviewers;
+
         }
 
         // @Override

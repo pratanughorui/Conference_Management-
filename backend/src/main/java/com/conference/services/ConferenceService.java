@@ -17,7 +17,7 @@ public interface ConferenceService {
 
     ConferenceDto getConferenceById(Integer conference_id);
 
-    List<ConferenceDto> getAllConferenceBtwDate();
+    ConferenceDto getAllConferenceBtwDate();
 
     // public Set<UserDto> GetAllUsersByConference(Integer conference_id);
 

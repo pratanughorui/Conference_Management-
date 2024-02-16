@@ -27,7 +27,10 @@ public class RoleController {
     @GetMapping("/getallrole")
     public List<RoleDto> getAllRoles() {
         List<Role> roles = this.roleRepo.findAll();
-        List<RoleDto> allroles = roles.stream().map(con -> this.modelMapper.map(con, RoleDto.class))
+
+        List<RoleDto> allroles = roles.stream()
+                .filter(role -> role.getRole_id() != 505) // Filter out the role with ID 505
+                .map(role -> this.modelMapper.map(role, RoleDto.class))
                 .collect(Collectors.toList());
         return allroles;
 

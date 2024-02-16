@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.boot.autoconfigure.security.SecurityProperties.User;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -25,12 +26,14 @@ import jakarta.validation.constraints.NotEmpty;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 @Entity
 @Table(name = "Conference")
 @NoArgsConstructor
-@Getter
 @Setter
+@Getter
+@ToString
 public class Conference {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -102,8 +105,8 @@ public class Conference {
   @OneToMany(mappedBy = "conference", cascade = CascadeType.REMOVE)
   private List<Track> tracks;
 
-  @ManyToMany(mappedBy = "conferences")
-  private Set<Authors> authors = new HashSet<>();
+  @OneToMany(mappedBy = "conferences")
+  private Set<Authors_work> authors = new HashSet<>();
 
   // public void setauthor_Works(Author_Work author_Work) {
   // this.author_Works.add(author_Work);

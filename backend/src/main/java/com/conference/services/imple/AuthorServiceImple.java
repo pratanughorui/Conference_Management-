@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
 import java.util.List;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.security.SecurityProperties.User;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -19,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.conference.config.AppConstants;
 
 import com.conference.entities.Authors;
+import com.conference.entities.Authors_work;
 import com.conference.entities.Conference;
 import com.conference.entities.Role;
 import com.conference.entities.Users;
@@ -29,7 +31,7 @@ import com.conference.payloads.AuthorWorkDto;
 import com.conference.payloads.ConferenceDto;
 import com.conference.payloads.UserDto;
 import com.conference.repositories.AuthorRepo;
-
+import com.conference.repositories.Authors_workRepo;
 import com.conference.repositories.ConferenceRepo;
 import com.conference.repositories.UserRepo;
 import com.conference.repositories.WorkRepo;
@@ -49,93 +51,23 @@ public class AuthorServiceImple implements AuthorService {
     @Autowired
     private WorkRepo workRepo;
 
+    @Autowired
+    private Authors_workRepo authors_workRepo;
+
     @Override
     public AuthorWorkDto CreateAuthorWork(AuthorWorkDto authorWorkDto, Integer conference_id) {
-        // TODO Auto-generated method stub
-
-        // Authors author = this.authorRepo.findById(author_id)
-        // .orElseThrow(() -> new ResourceNotFoundException("Users", "id", author_id));
-        // Conference conference =
-        // this.conferenceRepo.findByConference_name(authorWorkDto.getConference_name());
-        // if (conference == null) {
-        // return null;
-        // }
         Conference conference = this.conferenceRepo.findById(conference_id)
                 .orElseThrow(() -> new ResourceNotFoundException("Conference", "id", conference_id));
-        String email = authorWorkDto.getEmail();
-        Authors author = this.authorRepo.getByEmial(email);
-        if (author != null && conference.getAuthors().contains(author)) {
-            throw new DataIntegrityViolationException("This author is already present");
-        }
-        if (author == null) {
-            Authors authors = this.modelMapper.map(authorWorkDto, Authors.class);
-            // Authors savedauthor = this.authorRepo.save(authors);
-            Work work = this.modelMapper.map(authorWorkDto, Work.class);
-            work = this.workRepo.save(work);
-            if (work != null)
-                System.out.println("right");
-            String pdfname = authorWorkDto.getPdf_name();
-            String filename = Integer.toString(work.getWork_id())
-                    .concat(pdfname.substring(pdfname.lastIndexOf(".")));
-            work.setPdf_name(filename);
-            authorWorkDto.setPdf_name(filename);
-            // List<Work> workList = new ArrayList<>();
-            // workList.add(work);
-            // authors.setWorks(workList);
-            work.setAuthors(authors);
-            authors.getConferences().add(conference);
-            this.authorRepo.save(authors);
-            this.workRepo.save(work);
-        } else {
-            Work work = this.modelMapper.map(authorWorkDto, Work.class);
-            work = this.workRepo.save(work);
-            if (work != null)
-                System.out.println("right");
-            String pdfname = authorWorkDto.getPdf_name();
-            String filename = Integer.toString(work.getWork_id())
-                    .concat(pdfname.substring(pdfname.lastIndexOf(".")));
-            work.setPdf_name(filename);
-            authorWorkDto.setPdf_name(filename);
-            // List<Work> workList = author.getWorks();
-            // workList.add(work);
-            // author.setWorks(workList);
-            author.getConferences().add(conference);
-            work.setAuthors(author);
-            this.workRepo.save(work);
-        }
+        Authors_work authors_work = this.modelMapper.map(authorWorkDto, Authors_work.class);
+        authors_work.setConferences(conference);
+        Authors_work saved_authors_work = this.authors_workRepo.save(authors_work);
+        String pdfname = authorWorkDto.getPdf_name();
+        String filename = Integer.toString(saved_authors_work.getAuthor_id())
+                .concat(pdfname.substring(pdfname.lastIndexOf(".")));
+        saved_authors_work.setPdf_name(filename);
+        authors_work = this.authors_workRepo.save(saved_authors_work);
+        return this.modelMapper.map(authors_work, AuthorWorkDto.class);
 
-        return authorWorkDto;
-        /*
-         * // set author into author_work
-         * // author_Work.setAuthor(author);
-         * // set conference into author_work
-         * // author_Work.setConference(conference);
-         * // get pdf name and modify
-         * Author_Work createdauthorwork = this.authorWorkRepo.save(author_Work);
-         * int author_id = createdauthorwork.getAuthor_id();
-         * String pdfname = author_Work.getPdf_name();
-         * String filename =
-         * Integer.toString(author_id).concat(pdfname.substring(pdfname.lastIndexOf(".")
-         * ));
-         * // set pdfname into author_work
-         * author_Work.setPdf_name(filename);
-         * createdauthorwork = this.authorWorkRepo.save(author_Work);
-         * // Set<Author_Work> aw = new HashSet<>();
-         * // aw.add(author_Work);
-         * // set author_work in to conference
-         * // conference.setauthor_Works(author_Work);
-         * // conference = this.conferenceRepo.save(conference);
-         * // modelMapper.typeMap(Author_Work.class, AuthorWorkDto.class)
-         * // .addMapping(src -> src.getConference().getConference_id(),
-         * // AuthorWorkDto::setConference_name);
-         * // set author_work into author
-         * // author.setauthor_Works(author_Work);
-         * // author = this.authorRepo.save(author);
-         * 
-         * return this.modelMapper.map(createdauthorwork, AuthorWorkDto.class);
-         * // throw new UnsupportedOperationException("Unimplemented method
-         * // 'CreateAuthorWork'");
-         */
     }
 
     // public Author_Work dtoToentity(AuthorWorkDto authorWorkDto) {
@@ -236,6 +168,18 @@ public class AuthorServiceImple implements AuthorService {
         // ConferenceServiceImple().entityTodto(authors.getConference()));
         // authorDto.setAuthorWorkDto(this.entityTodto(au, authors));
         return authorDto;
+    }
+
+    @Override
+    public Set<AuthorWorkDto> getallauthors(Integer conference_id) {
+        // TODO Auto-generated method stub
+        Conference conference = this.conferenceRepo.findById(conference_id)
+                .orElseThrow(() -> new ResourceNotFoundException("Conference", "id", conference_id));
+        Set<Authors_work> authors_works = conference.getAuthors();
+        Set<AuthorWorkDto> authorWorkDtos = authors_works.stream()
+                .map(con -> this.modelMapper.map(con, AuthorWorkDto.class))
+                .collect(Collectors.toSet());
+        return authorWorkDtos;
     }
 
     // @Override

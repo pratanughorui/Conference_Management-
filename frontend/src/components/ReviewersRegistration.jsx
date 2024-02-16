@@ -1,84 +1,35 @@
 import React,{useState,useEffect} from 'react'
-import { createAuthorWork, listConference,gellAllRoles,createCommitteeMembers,gellAllusersBeforDate,listConferenceBtwDate } from '../Services/ConferenceServices';
 import { useLoaderData } from 'react-router-dom';
+import { createReviewers,gellAllusersBeforDate } from '../Services/ConferenceServices';
 
-const CommitteeMembersRegistration = () => {
 
-  const data=useLoaderData();
-  const conference=data.data;
-  const[role,setRoles]=useState([])
-  const [conferenceId, setConferenceId] = useState('');
-  const [completionMessage, setCompletionMessage] = useState('');
-  const [roleId, setRoleId] = useState('');
-  useEffect(()=>{
-   //fetchconference();
-   fetchRoles();
-  },[]);
-  //  const fetchconference = () => {
-  //   listConferenceBtwDate().then((Response)=>{
-  //      setConference(Response.data);
-  //      console.log(Response.data);
-  //    }).catch((err)=>{
-  //       console.log(err);
-  //    })
-  //  };
-   const fetchRoles=()=>{
-    gellAllRoles().then((Response)=>{
-      setRoles(Response.data); 
-    }).catch((err)=>{
-      console.log(err);
-   })
-   }
-    const [members, setMembers] = useState([]);
+const ReviewersRegistration=()=> {
+    const data=useLoaderData();
+    const conference=data.data;
+    const [completionMessage, setCompletionMessage] = useState(''); 
     const[newmembers,setNewmembers]=useState([]);
-    const [name, setName] = useState('');
-    const [address, setAddress] = useState('');
-    const [place, setPlace] = useState('');
-    const [state, setState] = useState('');
-    const [country, setCountry] = useState('');
-    const [password, setPassword] = useState('');
-    const [mobile, setMobile] = useState('');
-    //const [conferenceName, setConferenceName] = useState('');
-    const [roleName, setRoleName] = useState('');
-    const [email, setEmail] = useState('');
-    const [errors, setErrors] = useState({
-     // conferenceName: '',
-      roleName:'',
-      name: '',
-      address: '',
-      place: '',
-      state: '',
-      country: '',
-      mobile: '',
-      email: '',
-      password: '',
-    });
-// ----------------------------------------data submission-----------------------------------
-    const finalsave=(e)=>{
-      e.preventDefault();
-      createCommitteeMembers(newmembers,conference.conference_id).then((Response)=>{
-        console.log(Response.data);
-        setCompletionMessage('Conference created successfully!');
-        setNewmembers([]);
-        clearFields();
-    }).catch((error)=>{
-     if (error.response && error.response.data && error.response.data.message) {
-       // Access the error message from the response
-       const errorMessage = error.response.data.message;
-       console.log(errorMessage);
-       // Handle the error message as needed (e.g., display it to the user)
-     } else {
-       // If the error doesn't contain a specific message, log the entire error object
-       console.log(error);
-     }
-    })
-    }
-    
-    const handleSubmit = (e) => {
-      e.preventDefault();
-      // Add new member to the list
-      const newErrors = {};
-      //if (!conferenceName) newErrors.conferenceName = 'Conference name is required.';
+const [name, setName] = useState('');
+const [address, setAddress] = useState('');
+const [place, setPlace] = useState('');
+const [state, setState] = useState('');
+const [country, setCountry] = useState('');
+const [password, setPassword] = useState('');
+const [mobile, setMobile] = useState('');
+const [email, setEmail] = useState('');
+const [errors, setErrors] = useState({
+  name: '',
+  address: '',
+  place: '',
+  state: '',
+  country: '',
+  mobile: '',
+  email: '',
+  password: '',
+});
+
+const handleSubmit=(e)=>{
+    e.preventDefault();
+    const newErrors = {};
       if (!name) newErrors.name = 'Name is required.';
       if (!address) newErrors.address = 'Address is required.';
       if (!place) newErrors.place = 'place is required.';
@@ -87,51 +38,43 @@ const CommitteeMembersRegistration = () => {
       if (!mobile) newErrors.mobile = 'Contact number is required.';
       if (!email) newErrors.email = 'Email is required.';
       if (!password) newErrors.password = 'Password is required.';
-      if (!roleName) newErrors.roleName = 'roleName is required.';
       setErrors(newErrors);
       // If there are any errors, stop form submission
       if (Object.keys(newErrors).length > 0) {
         //console.log("ff");
         return;
       }
-//submission code
-     const member_details={name,address,place,state,country,password,mobile,email,roleName}
-     
-    //  setNewmembers([...newmembers,member_details]);
-    newmembers.push(member_details);
-     console.log(newmembers);
+      const Reviewers={name,address,place,state,country,password,mobile,email}
+      newmembers.push(Reviewers);
+      console.log(newmembers);
 
 
-    
-    };
-    const handleRoleChange = (e) => {
-      const selectedRole = role.find(conf => conf.role_name === e.target.value);
-      if (selectedRole) {
-        setRoleId(selectedRole.role_id);
-      }
-      setRoleName(e.target.value);
-    };
-    const clearFields = () => {
-      setName('');
-      setAddress('');
-      setPlace('');
-      setState('');
-      setCountry('');
-      setPassword('');
-      setMobile('');
-      setEmail('');
-      setRoleName('');
-  };
-  const getOldData=()=>{
-    gellAllusersBeforDate().then((Response)=>{
-      //  console.log(Response.data);
-      setMembers(Response.data);
-    }).catch((err)=>{
-      console.log(err);
-    });
-  }
-  const clearmembersTable=()=>{
-    setMembers([]);
+}
+const[oldmembers,setOldmembers]=useState([]);
+const getOldData=()=>{
+  gellAllusersBeforDate().then((Response)=>{
+    //  console.log(Response.data);
+    setOldmembers(Response.data);
+  }).catch((err)=>{
+    console.log(err);
+  });
+}
+const clearFields=()=>{
+    setName('');
+    setAddress('');
+    setPlace('');
+    setState('');
+    setCountry('');
+    setPassword('');
+    setMobile('');
+    setEmail('');
+}
+const delnewmwmber=(index)=>{
+    const updatedMembers = [...newmembers];
+      // Remove the member at the specified index
+      updatedMembers.splice(index, 1);
+      // Update the state with the updated array
+      setNewmembers(updatedMembers);
   }
   const clearnewmembersTable=()=>{
     setNewmembers([]);
@@ -141,28 +84,34 @@ const CommitteeMembersRegistration = () => {
     setAddress(member.address);
     setPlace(member.place);
     setState(member.state);
-    setRoleName(member.roleName)
     setCountry(member.country);
     setPassword(member.password);
     setMobile(member.mobile);
     setEmail(member.email);
+    //console.log(member);
 };
-const delnewmwmber=(index)=>{
-  const updatedMembers = [...newmembers];
-    // Remove the member at the specified index
-    updatedMembers.splice(index, 1);
-    // Update the state with the updated array
-    setNewmembers(updatedMembers);
+const finalsave=(e)=>{
+  e.preventDefault();
+  createReviewers(newmembers,conference.conference_id).then((Response)=>{
+    console.log(Response.data);
+    setCompletionMessage('Conference created successfully!');
+    clearnewmembersTable();
+    clearFields();
+  }).catch((err)=>{
+    console.log(err);
+  })
+}
+const clearoldmembersTable=()=>{
+  setOldmembers([]);
 }
   return (
-    <div>
-        <p className="text-start">Conference Name : {conference.conferences_title}</p>
+    <div> <p className="text-start">Conference Name : {conference.conferences_title}</p>
     <div className="container mt-5">
     
     <div className="row">
      
       <div className="col-md-6">
-        <h2>Add Member</h2>
+        <h2>Add Reviewers</h2>
         <form onSubmit={handleSubmit}>
           <div className="mb-3">
             <label htmlFor="name" className="form-label">Name:</label>
@@ -202,42 +151,7 @@ const delnewmwmber=(index)=>{
             <div className="invalid-feedback">{errors.mobile}</div>
           </div>
           
-          <div className="mb-3">
-          {/* <label className="form-label">Conference Name:</label>
-                <select
-                    className={`form-control ${errors.conferenceName ? 'is-invalid' : ''}`}
-                    value={conferenceName}
-                    onChange={handleConferenceChange}
-                    
-                  >
-                    <option value="">Select Conference</option>
-                    
-                  {
-                    conference.map(con=>
-                        <option value={con.conferences_title}>{con.conferences_title}</option>
-                       )
-                  }
-                  </select>
-                <div className="invalid-feedback">{errors.roleName}</div> */}
-          </div>
-          <div className="mb-3">
-          <label className="form-label">Roles:</label>
-                <select
-                    className={`form-control ${errors.roleName ? 'is-invalid' : ''}`}
-                    value={roleName}
-                    onChange={handleRoleChange}
-                    
-                  >
-                    <option value="">Select Roles</option>
-                    
-                  {
-                    role.map(con=>
-                        <option value={con.role_name}>{con.role_name}</option>
-                       )
-                  }
-                  </select>
-                <div className="invalid-feedback">{errors.roleName}</div>
-          </div>
+    
           <div className="mb-3">
             <label htmlFor="email" className="form-label">Email:</label>
             <input type="email" className={`form-control ${errors.email ? 'is-invalid' : ''}`} id="email" value={email} onChange={(e) => setEmail(e.target.value)} />
@@ -253,7 +167,7 @@ const delnewmwmber=(index)=>{
                   {completionMessage}
                 </div>
               )}
-        <h2>New Members</h2>
+        <h2>New Reviewers</h2>
         <table className="table">
           <thead>
             <tr>
@@ -294,7 +208,7 @@ const delnewmwmber=(index)=>{
             </tr>
           </thead>
           <tbody>
-            {members.map((member, index) => (
+            {oldmembers.map((member, index) => (
               <tr key={index} onClick={() => populateMemberForm(member)}>
                 <td>{member.email}</td>
                 <td>{member.name}</td>
@@ -303,16 +217,15 @@ const delnewmwmber=(index)=>{
           </tbody>
         </table>
         <button className="btn btn-primary" onClick={getOldData}>Old Members</button>&nbsp;
-        <button type="button" className="btn btn-danger" onClick={clearmembersTable}>Clear</button> 
+        <button type="button" className="btn btn-danger" onClick={clearoldmembersTable}>Clear</button> 
       </div>
       <div className="col-md-6">
         
       </div>
-    </div>
+   </div> </div>
     
-  </div>
   </div>
   )
 }
 
-export default CommitteeMembersRegistration
+export default ReviewersRegistration
