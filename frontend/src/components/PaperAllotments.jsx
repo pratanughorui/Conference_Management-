@@ -74,6 +74,7 @@ const fetchAuthors = () => {
       setCompletionMessage("Repeated elements");
       return;
     }
+
     
     const datas={paper,reviewer};
 
@@ -83,7 +84,7 @@ const fetchAuthors = () => {
     // console.log(index)
 
  
-    setCompletionMessage('');
+    //setCompletionMessage('');
     
     // Form submission logic here
 
@@ -91,6 +92,11 @@ const fetchAuthors = () => {
   
 
   };
+  if(completionMessage!=null){
+    setTimeout(()=>{
+      setCompletionMessage('');
+    },3000)
+  }
 const removeinfo=(index)=>{
   const updatedinformations = [...informations];
   // Remove the member at the specified index
@@ -101,19 +107,22 @@ const removeinfo=(index)=>{
 const handlepapertable=(index)=>{
   console.log(index);
 }
+const submitpaperallotment=()=>{
+  setCompletionMessage('Paper allotment successfully');
+  setInformations([]);
+}
   return (
     <div className="container mt-5">
+     <p className="text-start conference-info">
+  <span style={{ fontSize: '18px', fontWeight: 'bold', color: 'teal' }}>Conference Name: {conference.conferences_title}</span>
+</p>
       <div className="row">
         {/* Left side - Paper Allotment Form */}
         <div className="col-md-6">
           <div className="card">
             <div className="card-body">
-              <h3 className="card-title text-center mb-4">Paper Allotment Form</h3>
-              {completionMessage && (
-                <div className="alert alert-success" role="alert">
-                  {completionMessage}
-                </div>
-              )}
+              <h3 className="card-title text-center mb-4">Allotment Of Papers</h3>
+              
               <form onSubmit={handleFormSubmit}>
                 <div className="mb-3">
                   <label className="form-label">Reviewers:</label>
@@ -176,6 +185,11 @@ const handlepapertable=(index)=>{
           <div className="card">
             <div className="card-body">
             <div className="table-responsive">
+            {completionMessage && (
+                <div className="alert alert-success" role="alert">
+                  {completionMessage}
+                </div>
+              )}
     <table className="table table-striped">
       <thead>
         <tr>
@@ -208,7 +222,7 @@ const handlepapertable=(index)=>{
       </tbody>
     </table>
     {informations.length > 0 && (
-  <button className="btn btn-primary">Save</button>
+  <button className="btn btn-primary" onClick={submitpaperallotment}>Save</button>
 )}
   </div>
             </div>
@@ -225,6 +239,7 @@ const handlepapertable=(index)=>{
               <thead>
                 <tr>
                   <th>Author</th>
+                  <th>Title</th>
                   <th>Pdf</th>
                   {/* Add more columns if needed */}
                 </tr>
@@ -236,6 +251,7 @@ const handlepapertable=(index)=>{
                     <tr key={index}>
 
                       <td>{member.name}</td>
+                      <td>{member.title}</td>
                       <td>{member.pdf_name}</td>
                     </tr>
 

@@ -1,7 +1,9 @@
 import React,{useState} from 'react'
 import { createConference } from '../Services/ConferenceServices';
+import { useNavigate } from 'react-router-dom';
 
 const ConferenceCreation = () => {
+  const navigate = useNavigate();
     const [conferences_title, setConferences_title] = useState('');
   const [subject, setSubject] = useState('');
   const [venue, setVenue] = useState('');
@@ -9,6 +11,10 @@ const ConferenceCreation = () => {
   const [country, setCountry] = useState('');
   const [fromDate, setFromDate] = useState('');
   const [toDate, setToDate] = useState('');
+  const [datecallpaper, setDatecallpaper] = useState('');
+  const [lastdatesubpaper, setLastdatesubpaper] = useState('');
+  const [dateofallotpaper, setDateofallotpaper] = useState('');
+  const [lastdaterevsub, setLastdaterevsub] = useState('');
   const [completionMessage, setCompletionMessage] = useState('');
   const [errors, setErrors] = useState({
     conferences_title: '',
@@ -26,18 +32,22 @@ const ConferenceCreation = () => {
     // Handle form submission logic here
     const newErrors = {};
     if (!conferences_title) newErrors.conferences_title = 'Conference title is required.';
-    if (!subject) newErrors.subject = 'subject is required.';
-    if (!venue) newErrors.venue = 'venue is required.';
-    if (!place) newErrors.place = 'place is required.';
-    if (!country) newErrors.country = 'country is required.';
-    if (!fromDate) newErrors.fromDate = 'fromDate is required.';
-    if (!toDate) newErrors.toDate = 'toDate is required.';
+    if (!subject) newErrors.subject = 'This is required.';
+    if (!venue) newErrors.venue = 'this is required.';
+    if (!place) newErrors.place = 'this is required.';
+    if (!country) newErrors.country = 'this is required.';
+    if (!fromDate) newErrors.fromDate = 'thise is required.';
+    if (!toDate) newErrors.toDate = 'this is required.';
+    if (!datecallpaper) newErrors.datecallpaper = 'this is required.';
+    if (!lastdatesubpaper) newErrors.lastdatesubpaper = 'this is required.';
+    if (!dateofallotpaper) newErrors.dateofallotpaper = 'this is required.';
+    if (!lastdaterevsub) newErrors.lastdaterevsub = 'this is required.';
     setErrors(newErrors);
     if (Object.keys(newErrors).length > 0) {
       return;
     }
 
-    const conference={conferences_title,subject,venue,place,country,fromDate,toDate};
+    const conference={conferences_title,subject,venue,place,country,fromDate,toDate,datecallpaper,lastdatesubpaper,dateofallotpaper,lastdaterevsub};
     createConference(conference).then((Response)=>{
       console.log(Response.data);
       setCompletionMessage('Conference created successfully!');
@@ -48,6 +58,14 @@ const ConferenceCreation = () => {
       setCountry('');
       setFromDate('');
       setToDate('');
+      setDatecallpaper('');
+      setDateofallotpaper('');
+      setLastdaterevsub('');
+      setLastdatesubpaper('');
+      setTimeout(()=>{
+        navigate(-1);
+  
+      },2000);
     }).catch((err)=>{
       console.log("love");
       console.log(err);
@@ -59,7 +77,11 @@ const ConferenceCreation = () => {
       place,
       country,
       fromDate,
-      toDate
+      toDate,
+      datecallpaper,
+      lastdatesubpaper,
+      dateofallotpaper,
+      lastdaterevsub
     });
     // // Reset form fields after submission
     // setConferenceTitle('');
@@ -73,7 +95,7 @@ const ConferenceCreation = () => {
   return (
     <div className="container mt-5">
     <div className="row justify-content-center">
-      <div className="col-md-6">
+      <div className="col-md-8">
         <div className="card">
           <div className="card-body">
             <h3 className="card-title text-center mb-4">Create Conference</h3>
@@ -107,6 +129,16 @@ const ConferenceCreation = () => {
                 onChange={(e) => setVenue(e.target.value)}
               />
  <div className="invalid-feedback">{errors.venue}</div>
+ {/* -------------------------------------------------------------------------------------------- */}
+ <label className="form-label">Address:</label>
+              <input
+                type="text"
+                className={`form-control mb-3 ${errors.venue ? 'is-invalid' : ''}`}
+                value={venue}
+                onChange={(e) => setVenue(e.target.value)}
+              />
+ <div className="invalid-feedback">{errors.venue}</div>
+ {/* ------------------------------------------------------------------- */}
               <label className="form-label">Place:</label>
               <input
                 type="text"
@@ -115,6 +147,16 @@ const ConferenceCreation = () => {
                 onChange={(e) => setPlace(e.target.value)}
               />
  <div className="invalid-feedback">{errors.place}</div>
+ {/* -------------------------------------------------------------------------------------------- */}
+ <label className="form-label">State:</label>
+              <input
+                type="text"
+                className={`form-control mb-3 ${errors.venue ? 'is-invalid' : ''}`}
+                value={venue}
+                onChange={(e) => setVenue(e.target.value)}
+              />
+ <div className="invalid-feedback">{errors.venue}</div>
+ {/* ------------------------------------------------------------------- */}
               <label className="form-label">Country:</label>
               <input
                 type="text"
@@ -139,6 +181,40 @@ const ConferenceCreation = () => {
                 onChange={(e) => setToDate(e.target.value)}
               />
  <div className="invalid-feedback">{errors.toDate}</div>
+ {/* ---------------------------------------------------------------------------------- */}
+ <label className="form-label">Date of call for paper:</label>
+              <input
+                type="date"
+                className={`form-control mb-3 ${errors.datecallpaper ? 'is-invalid' : ''}`}
+                value={datecallpaper}
+                onChange={(e) => setDatecallpaper(e.target.value)}
+              />
+ <div className="invalid-feedback">{errors.datecallpaper}</div>
+ <label className="form-label">Last date for submission of paper:</label>
+              <input
+                type="date"
+                className={`form-control mb-3 ${errors.lastdatesubpaper ? 'is-invalid' : ''}`}
+                value={lastdatesubpaper}
+                onChange={(e) => setLastdatesubpaper(e.target.value)}
+              />
+ <div className="invalid-feedback">{errors.lastdatesubpaper}</div>
+ <label className="form-label">Date of allotment of papers to Reviewers:</label>
+              <input
+                type="date"
+                className={`form-control mb-3 ${errors.dateofallotpaper ? 'is-invalid' : ''}`}
+                value={dateofallotpaper}
+                onChange={(e) => setDateofallotpaper(e.target.value)}
+              />
+ <div className="invalid-feedback">{errors.dateofallotpaper}</div>
+ <label className="form-label">Last date for review submission:</label>
+              <input
+                type="date"
+                className={`form-control mb-3 ${errors.lastdaterevsub ? 'is-invalid' : ''}`}
+                value={lastdaterevsub}
+                onChange={(e) => setLastdaterevsub(e.target.value)}
+              />
+ <div className="invalid-feedback">{errors.lastdaterevsub}</div>
+ {/* ------------------------------------------------------------------- */}
               <button type="submit" className="btn btn-primary w-100 mt-3">
                 Submit
               </button>

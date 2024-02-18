@@ -42,10 +42,7 @@ public class ConferenceManagment1Application implements CommandLineRunner {
 			Role role4 = new Role();
 			role4.setRole_id(AppConstants.committee_member4);
 			role4.setRole_name("committee_member4");
-			Role role5 = new Role();
-			role5.setRole_id(AppConstants.Reviewer);
-			role5.setRole_name("Reviewer");
-			List<Role> result = List.of(role1, role2, role3, role4, role5);
+			List<Role> result = List.of(role1, role2, role3, role4);
 			this.rolerepo.saveAll(result);
 
 		} catch (Exception e) {

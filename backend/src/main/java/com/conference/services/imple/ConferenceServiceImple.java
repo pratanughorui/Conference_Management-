@@ -146,11 +146,17 @@ public class ConferenceServiceImple implements ConferenceService {
 
     @Override
     public ConferenceDto getAllConferenceBtwDate() {
+
         LocalDateTime currentDate = LocalDateTime.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         String now = currentDate.format(formatter);
+        System.out.println("jddddddddddddddddddd");
         Conference conferences = conferenceRepo.findAllConferencesBtwDate(now);
+        if (conferences == null) {
+            return null;
+        }
         ConferenceDto conferenceDtos = this.modelMapper.map(conferences, ConferenceDto.class);
+
         return conferenceDtos;
     }
 

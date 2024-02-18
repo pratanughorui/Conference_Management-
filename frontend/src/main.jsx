@@ -13,6 +13,7 @@ import Header from './components/Header'
 import { Route, RouterProvider, createBrowserRouter, createRoutesFromElements } from 'react-router-dom'
 import {listConferenceBtwDate,gellAllRoles,gellAllAuthors} from './Services/ConferenceServices'
 import ReviewersRegistration from './components/ReviewersRegistration.jsx'
+import Conference_Root from './components/Conference_Root.jsx'
 // const router=createBrowserRouter(
 //   createRoutesFromElements(
 //       <Route path='/' element={<Login/>}></Route>,
@@ -76,30 +77,16 @@ const router=createBrowserRouter([
   {
     path:'/',
     element:<Admin_Layout/>,
+    
     children:[
       {
-        path:'conference-creation',
-        element:<ConferenceCreation/>
-      },
-      {
-        path:'track-creation',
-        element:<TrackCreation/>,
-        loader:listConferenceBtwDate
-      },
-      {
-        path:'committee-members-registration',
-         element:<CommitteeMembersRegistration/>,
-        loader:listConferenceBtwDate
+        path:'conference-root',
+        element:<Conference_Root/>
       },
       {
        path:'paper-review',
        element:<PaperAllotments/>,
        loader:listConferenceBtwDate
-      },{
-        path:'reviewers-registration',
-        element:<ReviewersRegistration/>,
-        loader:listConferenceBtwDate
-
       }
     ]
   },
@@ -107,6 +94,23 @@ const router=createBrowserRouter([
       path:'/author-registration',
       element:<AuthorRegistration/>,
       loader:listConferenceBtwDate
+    },{
+      path:'/create-conference',
+      element:<ConferenceCreation/>
+    },{
+      path:'/track-creation',
+      element:<TrackCreation/>,
+      loader:listConferenceBtwDate
+    },
+    {
+      path:'/committee-members-registration',
+       element:<CommitteeMembersRegistration/>,
+      loader:listConferenceBtwDate
+    },{
+      path:'/reviewers-registration',
+      element:<ReviewersRegistration/>,
+      loader:listConferenceBtwDate
+
     }
 ])
 

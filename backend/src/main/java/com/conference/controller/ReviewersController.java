@@ -12,7 +12,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.conference.payloads.ReviewerDto;
 import com.conference.payloads.UserDto;
+import com.conference.services.ReviewerService;
 import com.conference.services.UserService;
 
 @RestController
@@ -21,15 +23,19 @@ public class ReviewersController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private ReviewerService reviewerService;
+
     @PostMapping("/createreviewer/{conference_id}")
-    public ResponseEntity<?> reviewerCreation(@RequestBody List<UserDto> UserDto, @PathVariable Integer conference_id) {
-        this.userService.createReviewer(UserDto, conference_id);
-        return new ResponseEntity<>("done", HttpStatus.CREATED);
+    public ResponseEntity<?> reviewerCreation(@RequestBody List<ReviewerDto> reviewerDto,
+            @PathVariable Integer conference_id) {
+        this.reviewerService.createReviewer(reviewerDto, conference_id);
+        return new ResponseEntity<>("Reviewers created successfully!", HttpStatus.CREATED);
     }
 
     @GetMapping("/getallreviwers/{conference_id}")
-    public List<UserDto> getallreviewers(@PathVariable Integer conference_id) {
-        List<UserDto> reviewer = this.userService.getallreviewers(conference_id);
+    public List<ReviewerDto> getallreviewers(@PathVariable Integer conference_id) {
+        List<ReviewerDto> reviewer = this.reviewerService.getallreviewers(conference_id);
         return reviewer;
     }
 

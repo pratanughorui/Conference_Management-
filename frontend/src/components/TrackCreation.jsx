@@ -1,10 +1,11 @@
 import React,{useEffect,useState} from 'react'
 import { createTracks, listConferenceBtwDate } from '../Services/ConferenceServices';
 import { useLoaderData } from 'react-router-dom';
-
+import { useNavigate } from 'react-router-dom';
 const TrackCreation = () => {
   const data=useLoaderData();
   const conference=data.data;
+  const navigate = useNavigate();
   const [conferenceId, setConferenceId] = useState('');
   // useEffect(()=>{
   //   fetchData();
@@ -20,7 +21,13 @@ const TrackCreation = () => {
   //   })
   // }
 
-
+  useEffect(() => {
+    if (!conference || Object.keys(conference).length === 0) {
+      // If conference data is empty, show popup or navigate back
+      //alert('Conference data is empty. Please go back and select a conference.');
+      navigate("/conference-root"); // Navigate back to previous page
+    }
+  }, [conference, navigate]);
 
 
 
@@ -70,6 +77,19 @@ const TrackCreation = () => {
     createTracks(conference.conference_id,tracks).then((Response)=>{
       console.log(Response.data);
       setCompletionMessage(Response.data);
+    //   setTimeout(() => {
+    //     navigate(-1); // Navigate back to previous page
+    //   }, 2000); // 2000 milliseconds = 2 seconds
+    // })
+    setConferenceName('');
+    setSubject('');
+    setTracks([]);
+    setTrackInput('');
+    setTimeout(()=>{
+      // navigate(-1);
+      setCompletionMessage('');
+
+    },2000);
     }).catch((err)=>{
       console.log(err);
     })
@@ -81,10 +101,7 @@ const TrackCreation = () => {
     });
 
     // Reset form fields after submission
-    setConferenceName('');
-    setSubject('');
-    setTracks([]);
-    setTrackInput('');
+   
   };
   const handleConferenceChange = (e) => {
     const selectedConference = conference.find(conf => conf.conferences_title === e.target.value);
@@ -96,11 +113,15 @@ const TrackCreation = () => {
   };
   return (
     <div>
-        <p className="text-start">Conference Name:{conference.conferences_title}</p>
-        <p className="text-start">Subject:{conference.subject}</p>
+        
+       
     <div className="container mt-5">
     <div className="row justify-content-center">
       <div className="col-md-6">
+      <p className="text-start conference-info">
+  <span style={{ fontSize: '18px', fontWeight: 'bold', color: 'teal' }}>Conference Name: {conference.conferences_title} | 
+ Subject: {conference.subject}</span>
+</p>
         <div className="card">
           <div className="card-body">
             <h3 className="card-title text-center mb-4">Tracks</h3>
@@ -161,13 +182,13 @@ const TrackCreation = () => {
                   {tracks.map((track, index) => (
                     <li key={index} className="list-group-item d-flex justify-content-between align-items-center">
                       {track}
-                      <button
-                        type='button'
-                        className="btn btn-danger btn-sm"
+                      <span
+                   
+                   style={{ cursor: 'pointer' }}
                         onClick={() => handleRemoveTrack(index)}
                       >
-                        <i className="bi bi-x"></i>
-                      </button>
+                        &#10060;
+                      </span>
                     </li>
                   ))}
                 </ul>

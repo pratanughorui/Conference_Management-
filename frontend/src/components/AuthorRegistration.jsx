@@ -120,13 +120,17 @@ const AuthorRegistration = () => {
     };
     return (
       <div>
-        <p className="text-start">Conference Name: {conference.conferences_title}</p>
+        
         <div className="container mt-5">
         <div className="row justify-content-center">
+       
           <div className="col-md-6">
+          <p className="text-start conference-info">
+  <span style={{ fontSize: '18px', fontWeight: 'bold', color: 'teal' }}>Conference Name: {conference.conferences_title}</span>
+</p>
             <div className="card">
               <div className="card-body">
-                <h3 className="card-title text-center mb-4">Author Registration</h3>
+                <h3 className="card-title text-center mb-4">Submit Paper</h3>
                 
                 {completionMessage && (
                 <div className="alert alert-success" role="alert">

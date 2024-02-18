@@ -8,20 +8,20 @@ const Header = () => {
   return (
     <Nav fill variant="tabs" defaultActiveKey="/home">
     <Nav.Item>
-      <Link to="/conference-creation" className="nav-link">Create Conference</Link>
+      <Link to="/conference-root" className="nav-link">Create Conference</Link>
     </Nav.Item>
     <Nav.Item>
-      <Link to="/track-creation" className="nav-link">Create Tracks</Link>
+      <Link  to={"paper-review"} className="nav-link"> Allot Paper</Link>
+    </Nav.Item>
+    {/* <Nav.Item>
+      <Link to="/committee-members-registration" className="nav-link"> Committee Members</Link>
     </Nav.Item>
     <Nav.Item>
-      <Link to="/committee-members-registration" className="nav-link">Create Committee Members</Link>
-    </Nav.Item>
-    <Nav.Item>
-      <Link to="/reviewers-registration" className="nav-link">Create Reviewers</Link>
+      <Link to="/reviewers-registration" className="nav-link"> Reviewers</Link>
     </Nav.Item>
     <Nav.Item>
       <Link to="/paper-review" className="nav-link">Paper Allotments</Link>
-    </Nav.Item>
+    </Nav.Item> */}
   </Nav>
   );
 };

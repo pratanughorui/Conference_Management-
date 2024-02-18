@@ -37,6 +37,11 @@ public class ConferenceDto {
     @NotEmpty
     private String toDate;
 
+    private String datecallpaper;
+    private String lastdatesubpaper;
+    private String dateofallotpaper;
+    private String lastdaterevsub;
+
     private String creationDateTimeAsString;
 
     // private Set<AuthorWorkDto> author_Works;

@@ -155,16 +155,24 @@ const delnewmwmber=(index)=>{
     setNewmembers(updatedMembers);
 }
   return (
-    <div>
-        <p className="text-start">Conference Name : {conference.conferences_title}</p>
     <div className="container mt-5">
-    
-    <div className="row">
-     
-      <div className="col-md-6">
-        <h2>Add Member</h2>
-        <form onSubmit={handleSubmit}>
-          <div className="mb-3">
+            <div className="row">
+            <p className="text-start conference-info">
+  <span style={{ fontSize: '18px', fontWeight: 'bold', color: 'teal' }}>Conference Name: {conference.conferences_title}</span>
+</p>
+                <div className="col-md-6">
+                
+                    <div className="card">
+                    
+                        <div className="card-body">
+                            <h2>Add Member</h2>
+                            <form onSubmit={handleSubmit}>
+                              {/* <div className='mb-3'>
+                              <label htmlFor="conference name" className="form-label">Conference Name:</label> 
+                            <input type="text" className="form-control"  value={conference.conferences_title} disabled/>  
+                              </div> */}
+                            <div className="mb-3">
+                            
             <label htmlFor="name" className="form-label">Name:</label>
             <input type="text" className={`form-control ${errors.name ? 'is-invalid' : ''}`} id="name" value={name} onChange={(e) => setName(e.target.value)} />
             <div className="invalid-feedback">{errors.name}</div>
@@ -244,50 +252,17 @@ const delnewmwmber=(index)=>{
             <div className="invalid-feedback">{errors.email}</div>
           </div>
           <button type="submit" className="btn btn-primary">Add</button> &nbsp;
-          <button type="button" className="btn btn-danger" onClick={clearFields}>Close</button>
-        </form>
-      </div>
-      <div className="col-md-6">
-      {completionMessage && (
-                <div className="alert alert-success" role="alert">
-                  {completionMessage}
+          <button type="button" className="btn" style={{backgroundColor: 'teal',color:'white'}} onClick={clearFields}>Next</button>
+                            </form>
+                        </div>
+                    </div>
                 </div>
-              )}
-        <h2>New Members</h2>
-        <table className="table">
-          <thead>
-            <tr>
-              <th scope="col">Email</th>
-              <th scope="col">Name</th>
-              <th scope='col'>Remove</th>
-            </tr>
-          </thead>
-          <tbody>
-            {newmembers.map((member, index) => (
-              <tr key={index} onClick={() => populateMemberForm(member)}>
-                <td>{member.email}</td>
-                <td>{member.name}</td>
-                <td>  <button className="btn btn-danger" onClick={()=>delnewmwmber(index)} >
-                del {/* Cross icon */}
-              </button> </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-        <button className="btn btn-primary" onClick={finalsave}>Save</button>&nbsp;
-        <button type="button" className="btn btn-danger" onClick={clearnewmembersTable}>Clear</button><br/><br/><br/>
-       
-       
-       {/* ---------------------------- */}
-       
-       
-       
-       
-       
-        
-        <h2>Old Members</h2>
-        <table className="table">
-          <thead>
+                <div className="col-md-6">
+                    <div className="card">
+                        <div className="card-body">
+                            <h2>Old Members</h2>
+                            <table className="table">
+                            <thead>
             <tr>
               <th scope="col">Email</th>
               <th scope="col">Name</th>
@@ -301,17 +276,46 @@ const delnewmwmber=(index)=>{
               </tr>
             ))}
           </tbody>
-        </table>
-        <button className="btn btn-primary" onClick={getOldData}>Old Members</button>&nbsp;
-        <button type="button" className="btn btn-danger" onClick={clearmembersTable}>Clear</button> 
-      </div>
-      <div className="col-md-6">
-        
-      </div>
-    </div>
-    
-  </div>
-  </div>
+                            </table>
+                            <button className="btn btn-primary" onClick={getOldData}>Old Members</button>&nbsp;
+        {/* <button type="button" className="btn btn-danger" onClick={clearmembersTable}>Clear</button>  */}
+        {
+          members.length > 0 && ( <button type="button" className="btn btn-danger" onClick={clearmembersTable}>Clear</button> )
+        }
+                        </div>
+                    </div>
+                    <div className="card mt-3">
+                        <div className="card-body">
+                            <h2>Members</h2>
+                            <table className="table">
+                            <thead>
+            <tr>
+              <th scope="col">Email</th>
+              <th scope="col">Name</th>
+              
+            </tr>
+          </thead>
+          <tbody>
+            {newmembers.map((member, index) => (
+              <tr key={index} onClick={() => populateMemberForm(member)}>
+                <td>{member.email}</td>
+                <td>{member.name}</td>
+                <td style={{ cursor: 'pointer' }} onClick={()=>delnewmwmber(index)}>&#10060;</td>
+              </tr>
+            ))}
+          </tbody>
+                            </table>
+                            {newmembers.length > 0 && (
+  <>
+    <button className="btn btn-primary" onClick={finalsave}>Save</button>&nbsp;
+    <button type="button" className="btn btn-danger" onClick={clearnewmembersTable}>Clear</button>
+  </>
+)}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
   )
 }
 

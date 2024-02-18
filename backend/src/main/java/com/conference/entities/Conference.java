@@ -48,6 +48,11 @@ public class Conference {
   private String fromDate;
 
   private String toDate;
+  private String datecallpaper;
+  private String lastdatesubpaper;
+  private String dateofallotpaper;
+  private String lastdaterevsub;
+
   @CreationTimestamp // This annotation automatically populates the field with the current timestamp
                      // on entity creation
 
@@ -92,6 +97,9 @@ public class Conference {
 
   @ManyToMany(mappedBy = "conferences")
   private List<Users> user = new ArrayList<>();
+
+  @ManyToMany(mappedBy = "conferences")
+  private List<Reviewer> reviewers = new ArrayList<>();
 
   // @ManyToMany
   // @JoinTable(name = "conference_user", joinColumns = @JoinColumn(name =
