@@ -10,4 +10,6 @@ public interface ReviewerService {
 
     List<ReviewerDto> getallreviewers(Integer conference_id);
 
+    List<ReviewerDto> getallReviewersbeforerecentdate();
+
 }

@@ -113,14 +113,15 @@ const ConferenceCreation = () => {
                 onChange={(e) => setConferences_title(e.target.value)}
               />
                <div className="invalid-feedback">{errors.conferences_title}</div>
-              <label className="form-label">Subject:</label>
+
+              <label className="form-label">Webside:</label>
               <input
                 type="text"
-                className={`form-control mb-3 ${errors.subject ? 'is-invalid' : ''}`}
-                value={subject}
-                onChange={(e) => setSubject(e.target.value)}
+                className={"form-control mb-3"}
+                // value={subject}
+                // onChange={(e) => setSubject(e.target.value)}
               />
-                <div className="invalid-feedback">{errors.subject}</div>
+                {/* <div className="invalid-feedback">{errors.subject}</div> */}
               <label className="form-label">Venue:</label>
               <input
                 type="text"
@@ -134,8 +135,8 @@ const ConferenceCreation = () => {
               <input
                 type="text"
                 className={`form-control mb-3 ${errors.venue ? 'is-invalid' : ''}`}
-                value={venue}
-                onChange={(e) => setVenue(e.target.value)}
+                //value={}
+               // onChange={(e) => setVenue(e.target.value)}
               />
  <div className="invalid-feedback">{errors.venue}</div>
  {/* ------------------------------------------------------------------- */}
@@ -152,8 +153,8 @@ const ConferenceCreation = () => {
               <input
                 type="text"
                 className={`form-control mb-3 ${errors.venue ? 'is-invalid' : ''}`}
-                value={venue}
-                onChange={(e) => setVenue(e.target.value)}
+                // value={venue}
+                // onChange={(e) => setVenue(e.target.value)}
               />
  <div className="invalid-feedback">{errors.venue}</div>
  {/* ------------------------------------------------------------------- */}

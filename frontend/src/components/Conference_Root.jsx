@@ -14,6 +14,7 @@ function Conference_Root() {
           <ListGroup>
             <Link  to={"/create-conference"} style={linkStyle}><ListGroup.Item>Create Conference</ListGroup.Item></Link><br/>
             <Link to={"/track-creation"} style={linkStyle}><ListGroup.Item>Track</ListGroup.Item></Link><br/>
+            <Link to={"/topic-creation"} style={linkStyle}><ListGroup.Item>Topics</ListGroup.Item></Link><br/>
             <Link to={"/committee-members-registration"} style={linkStyle}><ListGroup.Item>Members</ListGroup.Item></Link><br/>
             <Link to={"/reviewers-registration"} style={linkStyle}><ListGroup.Item>Reviewers</ListGroup.Item></Link><br/>
           </ListGroup>

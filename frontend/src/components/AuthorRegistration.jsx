@@ -124,7 +124,7 @@ const AuthorRegistration = () => {
         <div className="container mt-5">
         <div className="row justify-content-center">
        
-          <div className="col-md-6">
+          <div className="col-md-7">
           <p className="text-start conference-info">
   <span style={{ fontSize: '18px', fontWeight: 'bold', color: 'teal' }}>Conference Name: {conference.conferences_title}</span>
 </p>
@@ -162,29 +162,29 @@ const AuthorRegistration = () => {
                     onChange={(e) => setName(e.target.value)}
                   />
              <div className="invalid-feedback">{errors.name}</div>
-          <label className="form-label">Address:</label>
+          <label className="form-label">Affiliation:</label>
           <textarea
             className={`form-control mb-3 ${errors.address ? 'is-invalid' : ''}`}
-            value={address}
-            onChange={(e) => setAddress(e.target.value)}
+            // value={address}
+            // onChange={(e) => setAddress(e.target.value)}
           ></textarea>
-   <div className="invalid-feedback">{errors.address}</div>
-          <label className="form-label">City:</label>
+   {/* <div className="invalid-feedback">{errors.address}</div> */}
+          {/* <label className="form-label">City:</label>
           <input
             type="text"
             className={`form-control mb-3 ${errors.city ? 'is-invalid' : ''}`}
             value={city}
             onChange={(e) => setCity(e.target.value)}
           />
-  <div className="invalid-feedback">{errors.city}</div>
-          <label className="form-label">State:</label>
+  <div className="invalid-feedback">{errors.city}</div> */}
+          {/* <label className="form-label">State:</label>
           <input
             type="text"
             className={`form-control mb-3 ${errors.state ? 'is-invalid' : ''}`}
             value={state}
             onChange={(e) => setState(e.target.value)}
           />
-          <div className="invalid-feedback">{errors.state}</div>
+          <div className="invalid-feedback">{errors.state}</div> */}
           {/* -------------------------- */}
           <label className="form-label">Country:</label>
           <input

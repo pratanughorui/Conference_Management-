@@ -58,7 +58,7 @@ const CommitteeMembersRegistration = () => {
       e.preventDefault();
       createCommitteeMembers(newmembers,conference.conference_id).then((Response)=>{
         console.log(Response.data);
-        setCompletionMessage('Conference created successfully!');
+        setCompletionMessage('Members created successfully!');
         setNewmembers([]);
         clearFields();
     }).catch((error)=>{
@@ -72,6 +72,9 @@ const CommitteeMembersRegistration = () => {
        console.log(error);
      }
     })
+    setTimeout(()=>{
+      setCompletionMessage('');
+    },3000)
     }
     
     const handleSubmit = (e) => {
@@ -154,6 +157,7 @@ const delnewmwmber=(index)=>{
     // Update the state with the updated array
     setNewmembers(updatedMembers);
 }
+
   return (
     <div className="container mt-5">
             <div className="row">
@@ -285,6 +289,11 @@ const delnewmwmber=(index)=>{
                         </div>
                     </div>
                     <div className="card mt-3">
+                    {completionMessage && (
+                  <div className="alert alert-success" role="alert">
+                    {completionMessage}
+                  </div>
+                )}
                         <div className="card-body">
                             <h2>Members</h2>
                             <table className="table">

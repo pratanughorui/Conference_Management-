@@ -1,6 +1,10 @@
 package com.conference.services.imple;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
@@ -64,5 +68,40 @@ public class ReviewerServiceImple implements ReviewerService {
                 .collect(Collectors.toList());
         return reviewerDtos;
     }
+
+    @Override
+    public List<ReviewerDto> getallReviewersbeforerecentdate() {
+        // TODO Auto-generated method stub
+        LocalDateTime currentDate = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        String now = currentDate.format(formatter);
+        List<Conference> conferences = this.conferenceRepo.findAllConferencesBeforeDate(now);
+        List<Reviewer> reviewers = new ArrayList<>();
+        for (Conference c : conferences) {
+            reviewers.addAll(c.getReviewers());
+        }
+        List<ReviewerDto> reviewerDtos = reviewers.stream().map(con -> this.modelMapper.map(con, ReviewerDto.class))
+                .collect(Collectors.toList());
+        return reviewerDtos;
+    }
+    /*
+     * @Override
+     * public List<UserDto> getAllUserBeforeRecentDate() {
+     * LocalDateTime currentDate = LocalDateTime.now();
+     * DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+     * String now = currentDate.format(formatter);
+     * List<Conference> conferences =
+     * this.conferenceRepo.findAllConferencesBeforeDate(now);
+     * List<Users> users = new ArrayList<>();
+     * for (Conference c : conferences) {
+     * users.addAll(c.getUser());
+     * }
+     * List<UserDto> users2 = users.stream().map(con -> this.modelMapper.map(con,
+     * UserDto.class))
+     * .collect(Collectors.toList());
+     * return users2;
+     * 
+     * }
+     */
 
 }

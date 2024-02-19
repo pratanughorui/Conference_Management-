@@ -1,6 +1,6 @@
 import React,{useState,useEffect} from 'react'
 import { useLoaderData } from 'react-router-dom';
-import { createReviewers,gellAllusersBeforDate } from '../Services/ConferenceServices';
+import { createReviewers,gellAllusersBeforDate,gellAllreviewersBeforDate } from '../Services/ConferenceServices';
 
 
 const ReviewersRegistration=()=> {
@@ -52,13 +52,22 @@ const handleSubmit=(e)=>{
 }
 const[oldmembers,setOldmembers]=useState([]);
 const getOldData=()=>{
-  gellAllusersBeforDate().then((Response)=>{
-    //  console.log(Response.data);
-    setOldmembers(Response.data);
+  // gellAllusersBeforDate().then((Response)=>{
+  //     //console.log(Response.data);
+  //   setOldmembers(Response.data);
+  // }).catch((err)=>{
+  //   console.log(err);
+  // });
+ // console.log(oldmembers.length);
+  gellAllreviewersBeforDate().then((Response2)=>{
+    setOldmembers(prevData => prevData.concat(Response2.data));
   }).catch((err)=>{
     console.log(err);
-  });
+  })
+ 
 }
+
+
 const clearFields=()=>{
     setName('');
     setAddress('');

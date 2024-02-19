@@ -14,6 +14,7 @@ import { Route, RouterProvider, createBrowserRouter, createRoutesFromElements } 
 import {listConferenceBtwDate,gellAllRoles,gellAllAuthors} from './Services/ConferenceServices'
 import ReviewersRegistration from './components/ReviewersRegistration.jsx'
 import Conference_Root from './components/Conference_Root.jsx'
+import TopicCreation from './components/TopicCreation.jsx'
 // const router=createBrowserRouter(
 //   createRoutesFromElements(
 //       <Route path='/' element={<Login/>}></Route>,
@@ -111,6 +112,10 @@ const router=createBrowserRouter([
       element:<ReviewersRegistration/>,
       loader:listConferenceBtwDate
 
+    },{
+      path:'/topic-creation',
+      element:<TopicCreation/>,
+      loader:listConferenceBtwDate
     }
 ])
 

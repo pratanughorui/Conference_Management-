@@ -39,4 +39,10 @@ public class ReviewersController {
         return reviewer;
     }
 
+    @GetMapping("/getallreviewersbeforerecentdate")
+    public List<ReviewerDto> getallreviewersbeforerecentdate() {
+        List<ReviewerDto> reviewer = this.reviewerService.getallReviewersbeforerecentdate();
+        return reviewer;
+    }
+
 }

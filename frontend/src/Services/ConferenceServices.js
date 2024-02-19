@@ -45,4 +45,5 @@ export const gellAllAuthors=(conference_id)=>{
 export const gellAllReviewers=(conference_id)=>{
   return axios.get(`http://localhost:9090/Reviewer/getallreviwers/${conference_id}`);
 }
+export const gellAllreviewersBeforDate=()=>axios.get('http://localhost:9090/Reviewer/getallreviewersbeforerecentdate');
 
