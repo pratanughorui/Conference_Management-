@@ -6,9 +6,11 @@ import com.conference.payloads.ReviewerDto;
 import com.conference.payloads.UserDto;
 
 public interface ReviewerService {
-    public boolean createReviewer(List<ReviewerDto> reviewerDto, Integer conference_id);
+    public boolean createReviewer(List<ReviewerDto> reviewerDto, Integer track_id);
 
     List<ReviewerDto> getallreviewers(Integer conference_id);
+
+    List<ReviewerDto> getallreviewersbytrack(Integer track_id);
 
     List<ReviewerDto> getallReviewersbeforerecentdate();
 

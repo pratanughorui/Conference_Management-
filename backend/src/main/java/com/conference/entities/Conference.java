@@ -95,11 +95,8 @@ public class Conference {
   // "conference_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
   // private Set<Users> attendees;
 
-  @ManyToMany(mappedBy = "conferences")
-  private List<Users> user = new ArrayList<>();
-
-  @ManyToMany(mappedBy = "conferences")
-  private List<Reviewer> reviewers = new ArrayList<>();
+  // @ManyToMany(mappedBy = "conferences")
+  // private List<Reviewer> reviewers = new ArrayList<>();
 
   // @ManyToMany
   // @JoinTable(name = "conference_user", joinColumns = @JoinColumn(name =
@@ -109,12 +106,17 @@ public class Conference {
   // @OneToMany(mappedBy = "conference", cascade = CascadeType.ALL, orphanRemoval
   // = true)
   // private Set<Authors> author;
+  @OneToMany(mappedBy = "conference", cascade = CascadeType.REMOVE)
+  private List<Users> user;
 
   @OneToMany(mappedBy = "conference", cascade = CascadeType.REMOVE)
   private List<Track> tracks;
 
+  @OneToMany(mappedBy = "conference", cascade = CascadeType.REMOVE)
+  private List<Committee> committees;
+
   @OneToMany(mappedBy = "conferences")
-  private Set<Authors_work> authors = new HashSet<>();
+  private List<Authors_work> authors = new ArrayList<>();
 
   // public void setauthor_Works(Author_Work author_Work) {
   // this.author_Works.add(author_Work);

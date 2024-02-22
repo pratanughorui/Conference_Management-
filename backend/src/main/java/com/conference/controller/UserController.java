@@ -33,9 +33,10 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @PostMapping("/createuser/{conference_id}")
-    public ResponseEntity<?> CreateUser(@RequestBody List<UserDto> userDto, @PathVariable Integer conference_id) {
-        this.userService.createUser(userDto, conference_id);
+    @PostMapping("/createuser/{committee_id}/{conference_id}")
+    public ResponseEntity<?> CreateUser(@RequestBody List<UserDto> userDto, @PathVariable Integer conference_id,
+            @PathVariable Integer committee_id) {
+        this.userService.createUser(userDto, committee_id, conference_id);
         // if (createduser == null) {
         // return new ResponseEntity<>("Server problem", HttpStatus.BAD_REQUEST);
         // }

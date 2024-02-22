@@ -17,6 +17,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import com.conference.config.AppConstants;
+import com.conference.entities.Committee;
 import com.conference.entities.Conference;
 import com.conference.entities.Role;
 import com.conference.entities.Users;
@@ -24,6 +25,7 @@ import com.conference.exceptions.ResourceNotFoundException;
 import com.conference.payloads.ConferenceDto;
 import com.conference.payloads.RoleDto;
 import com.conference.payloads.UserDto;
+import com.conference.repositories.CommitteeRepo;
 import com.conference.repositories.ConferenceRepo;
 import com.conference.repositories.RoleRepo;
 import com.conference.repositories.UserRepo;
@@ -40,11 +42,17 @@ public class UserServiceImple implements UserService {
         private RoleRepo roleRepo;
         @Autowired
         private ModelMapper modelMapper;
+
+        @Autowired
+        private CommitteeRepo committeeRepo;
         // @Autowired
         // private PasswordEncoder passwordEncoder;
 
         @Override
-        public boolean createUser(List<UserDto> userDto, Integer conference_id) {
+        public boolean createUser(List<UserDto> userDto, Integer committee_id, Integer conference_id) {
+                Committee committee = this.committeeRepo.findById(committee_id)
+                                .orElseThrow(() -> new ResourceNotFoundException("Committee", "id",
+                                                committee_id));
                 Conference conference = this.conferenceRepo.findById(conference_id)
                                 .orElseThrow(() -> new ResourceNotFoundException("Conference", "id",
                                                 conference_id));
@@ -56,22 +64,23 @@ public class UserServiceImple implements UserService {
                                 Users newuser = this.modelMapper.map(user, Users.class);
                                 System.out.println(newuser.toString());
                                 newuser.getRoles().add(role);
-                                newuser.getConferences().add(conference);
-
+                                newuser.getCommittee().add(committee);
+                                newuser.setConference(conference);
                                 this.userRepo.save(newuser);
                         } else {
-                                if (conference.getUser().contains(existuser) &&
+                                if (committee.getUser().contains(existuser) &&
                                                 existuser.getRoles().contains(role)) {
                                         throw new DataIntegrityViolationException("this user is already exist");
                                 } else if (existuser.getRoles().contains(role)) {
-                                        existuser.getConferences().add(conference);
-                                } else if (conference.getUser().contains(existuser)) {
+                                        existuser.getCommittee().add(committee);
+                                } else if (committee.getUser().contains(existuser)) {
                                         existuser.getRoles().add(role);
                                 } else {
-                                        existuser.getConferences().add(conference);
+                                        existuser.getCommittee().add(committee);
                                         existuser.getRoles().add(role);
 
                                 }
+                                existuser.setConference(conference);
                                 this.userRepo.save(existuser);
 
                         }
@@ -115,43 +124,43 @@ public class UserServiceImple implements UserService {
 
         }
 
-        @Override
-        public boolean createReviewer(List<UserDto> userDto, Integer conference_id) {
-                Conference conference = this.conferenceRepo.findById(conference_id)
-                                .orElseThrow(() -> new ResourceNotFoundException("Conference", "id",
-                                                conference_id));
-                Role role = this.roleRepo.findById(505)
-                                .orElseThrow(() -> new ResourceNotFoundException("role", "id",
-                                                505));
-                for (UserDto user : userDto) {
-                        String email = user.getEmail();
-                        Users existuser = this.userRepo.findByEmail(email);
-                        if (existuser == null) {
-                                Users newuser = this.modelMapper.map(user, Users.class);
-                                newuser.getRoles().add(role);
-                                newuser.getConferences().add(conference);
-                                this.userRepo.save(newuser);
-                        } else {
-                                if (conference.getUser().contains(existuser) &&
-                                                existuser.getRoles().contains(role)) {
-                                        throw new DataIntegrityViolationException("this user is already exist");
-                                } else if (existuser.getRoles().contains(role)) {
-                                        existuser.getConferences().add(conference);
-                                } else if (conference.getUser().contains(existuser)) {
-                                        existuser.getRoles().add(role);
-                                } else {
-                                        existuser.getConferences().add(conference);
-                                        existuser.getRoles().add(role);
+        // @Override
+        // public boolean createReviewer(List<UserDto> userDto, Integer conference_id) {
+        // Conference conference = this.conferenceRepo.findById(conference_id)
+        // .orElseThrow(() -> new ResourceNotFoundException("Conference", "id",
+        // conference_id));
+        // Role role = this.roleRepo.findById(505)
+        // .orElseThrow(() -> new ResourceNotFoundException("role", "id",
+        // 505));
+        // for (UserDto user : userDto) {
+        // String email = user.getEmail();
+        // Users existuser = this.userRepo.findByEmail(email);
+        // if (existuser == null) {
+        // Users newuser = this.modelMapper.map(user, Users.class);
+        // newuser.getRoles().add(role);
+        // newuser.getConferences().add(conference);
+        // this.userRepo.save(newuser);
+        // } else {
+        // if (conference.getUser().contains(existuser) &&
+        // existuser.getRoles().contains(role)) {
+        // throw new DataIntegrityViolationException("this user is already exist");
+        // } else if (existuser.getRoles().contains(role)) {
+        // existuser.getConferences().add(conference);
+        // } else if (conference.getUser().contains(existuser)) {
+        // existuser.getRoles().add(role);
+        // } else {
+        // existuser.getConferences().add(conference);
+        // existuser.getRoles().add(role);
 
-                                }
-                                this.userRepo.save(existuser);
+        // }
+        // this.userRepo.save(existuser);
 
-                        }
+        // }
 
-                }
+        // }
 
-                return true;
-        }
+        // return true;
+        // }
 
         public Users dtoTouser(UserDto userDto) {
                 Users user = new Users();

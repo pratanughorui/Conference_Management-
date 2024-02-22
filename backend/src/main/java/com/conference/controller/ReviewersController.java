@@ -26,16 +26,22 @@ public class ReviewersController {
     @Autowired
     private ReviewerService reviewerService;
 
-    @PostMapping("/createreviewer/{conference_id}")
+    @PostMapping("/createreviewer/{track_id}")
     public ResponseEntity<?> reviewerCreation(@RequestBody List<ReviewerDto> reviewerDto,
-            @PathVariable Integer conference_id) {
-        this.reviewerService.createReviewer(reviewerDto, conference_id);
+            @PathVariable Integer track_id) {
+        this.reviewerService.createReviewer(reviewerDto, track_id);
         return new ResponseEntity<>("Reviewers created successfully!", HttpStatus.CREATED);
     }
 
     @GetMapping("/getallreviwers/{conference_id}")
     public List<ReviewerDto> getallreviewers(@PathVariable Integer conference_id) {
         List<ReviewerDto> reviewer = this.reviewerService.getallreviewers(conference_id);
+        return reviewer;
+    }
+
+    @GetMapping("/getallreviwersbytrack/{track_id}")
+    public List<ReviewerDto> getallreviewersbytrack(@PathVariable Integer track_id) {
+        List<ReviewerDto> reviewer = this.reviewerService.getallreviewersbytrack(track_id);
         return reviewer;
     }
 

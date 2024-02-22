@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
+import org.aspectj.weaver.tools.Trace;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import com.conference.entities.Conference;
 import com.conference.entities.Reviewer;
+import com.conference.entities.Track;
 import com.conference.entities.Users;
 import com.conference.exceptions.ResourceNotFoundException;
 import com.conference.payloads.ConferenceDto;
@@ -21,6 +23,7 @@ import com.conference.payloads.ReviewerDto;
 import com.conference.payloads.UserDto;
 import com.conference.repositories.ConferenceRepo;
 import com.conference.repositories.ReviewerRepo;
+import com.conference.repositories.TrackRepo;
 import com.conference.services.ReviewerService;
 
 @Service
@@ -32,24 +35,26 @@ public class ReviewerServiceImple implements ReviewerService {
     private ConferenceRepo conferenceRepo;
     @Autowired
     private ModelMapper modelMapper;
+    @Autowired
+    private TrackRepo trackRepo;
 
     @Override
-    public boolean createReviewer(List<ReviewerDto> reviewerDto, Integer conference_id) {
-        Conference conference = this.conferenceRepo.findById(conference_id)
-                .orElseThrow(() -> new ResourceNotFoundException("Conference", "id",
-                        conference_id));
+    public boolean createReviewer(List<ReviewerDto> reviewerDto, Integer track_id) {
+        Track track = this.trackRepo.findById(track_id)
+                .orElseThrow(() -> new ResourceNotFoundException("Track", "id",
+                        track_id));
         for (ReviewerDto reviewer : reviewerDto) {
             String email = reviewer.getEmail();
             Reviewer existreviewer = this.reviewerRepo.findByEmail(email);
             if (existreviewer == null) {
                 Reviewer newuser = this.modelMapper.map(reviewer, Reviewer.class);
-                newuser.getConferences().add(conference);
+                newuser.getTracks().add(track);
                 this.reviewerRepo.save(newuser);
             } else {
-                if (conference.getReviewers().contains(existreviewer)) {
+                if (track.getReviewers().contains(existreviewer)) {
                     throw new DataIntegrityViolationException("This user is already exist");
                 } else {
-                    existreviewer.getConferences().add(conference);
+                    existreviewer.getTracks().add(track);
                     this.reviewerRepo.save(existreviewer);
                 }
             }
@@ -62,7 +67,12 @@ public class ReviewerServiceImple implements ReviewerService {
         Conference conference = this.conferenceRepo.findById(conference_id)
                 .orElseThrow(() -> new ResourceNotFoundException("Conference", "id",
                         conference_id));
-        List<Reviewer> reviewers = conference.getReviewers();
+        List<Track> tracks = conference.getTracks();
+
+        List<Reviewer> reviewers = new ArrayList<>();
+        for (Track t : tracks) {
+            reviewers.addAll(t.getReviewers());
+        }
         List<ReviewerDto> reviewerDtos = reviewers.stream()
                 .map(con -> this.modelMapper.map(con, ReviewerDto.class))
                 .collect(Collectors.toList());
@@ -76,8 +86,12 @@ public class ReviewerServiceImple implements ReviewerService {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         String now = currentDate.format(formatter);
         List<Conference> conferences = this.conferenceRepo.findAllConferencesBeforeDate(now);
+        List<Track> tracks = new ArrayList<>();
+        for (Conference con : conferences) {
+            tracks.addAll(con.getTracks());
+        }
         List<Reviewer> reviewers = new ArrayList<>();
-        for (Conference c : conferences) {
+        for (Track c : tracks) {
             reviewers.addAll(c.getReviewers());
         }
         List<ReviewerDto> reviewerDtos = reviewers.stream().map(con -> this.modelMapper.map(con, ReviewerDto.class))
@@ -103,5 +117,18 @@ public class ReviewerServiceImple implements ReviewerService {
      * 
      * }
      */
+
+    @Override
+    public List<ReviewerDto> getallreviewersbytrack(Integer track_id) {
+        // TODO Auto-generated method stub
+        Track track = this.trackRepo.findById(track_id)
+                .orElseThrow(() -> new ResourceNotFoundException("Track", "id",
+                        track_id));
+        List<Reviewer> reviewers = track.getReviewers();
+        List<ReviewerDto> reviewerDtos = reviewers.stream().map(con -> this.modelMapper.map(con, ReviewerDto.class))
+                .collect(Collectors.toList());
+        return reviewerDtos;
+
+    }
 
 }

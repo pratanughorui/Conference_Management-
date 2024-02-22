@@ -22,6 +22,7 @@ public class AuthorWorkDto {
     private int author_id;
     private String name;
     private String address;
+    private String affiliation;
     private String city;
     private String state;
     private String country;

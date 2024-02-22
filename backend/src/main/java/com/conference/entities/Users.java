@@ -48,11 +48,15 @@ public class Users {
   // private Conference conference;
 
   @ManyToMany
-  @JoinTable(name = "conference_user", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "conference_id"))
-  private List<Conference> conferences = new ArrayList<>();
+  @JoinTable(name = "committee_user", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "committee_id"))
+  private List<Committee> committee = new ArrayList<>();
 
   // @ManyToMany(mappedBy = "user")
   // private Set<Conference> conferences = new HashSet<>();
+
+  @ManyToOne
+  @JoinColumn(name = "conference_id")
+  private Conference conference;
 
   @ManyToMany
   @JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))

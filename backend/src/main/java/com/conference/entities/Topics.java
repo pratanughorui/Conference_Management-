@@ -1,15 +1,15 @@
 package com.conference.entities;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
@@ -18,23 +18,19 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "Tracks")
+@Table(name = "Topics")
 @Getter
 @Setter
 @NoArgsConstructor
-public class Track {
+public class Topics {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int track_id;
-    private String track_name;
+    private int topic_id;
+    private String topic_name;
     @ManyToOne
-    @JoinColumn(name = "conference_id")
-    private Conference conference;
+    @JoinColumn(name = "track_id")
+    private Track track;
 
-    @OneToMany(mappedBy = "track")
-    private List<Topics> topics;
-
-    @ManyToMany(mappedBy = "tracks")
-    private List<Reviewer> reviewers = new ArrayList<>();
-
+    @OneToMany(mappedBy = "topics")
+    private List<Authors_work> authors = new ArrayList<>();
 }

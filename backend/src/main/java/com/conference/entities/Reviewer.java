@@ -35,6 +35,6 @@ public class Reviewer {
     @Column(unique = true)
     private String email;
     @ManyToMany
-    @JoinTable(name = "conference_reviewer", joinColumns = @JoinColumn(name = "reviewer_id"), inverseJoinColumns = @JoinColumn(name = "conference_id"))
-    private List<Conference> conferences = new ArrayList<>();
+    @JoinTable(name = "track_reviewer", joinColumns = @JoinColumn(name = "reviewer_id"), inverseJoinColumns = @JoinColumn(name = "track_id"))
+    private List<Track> tracks = new ArrayList<>();
 }

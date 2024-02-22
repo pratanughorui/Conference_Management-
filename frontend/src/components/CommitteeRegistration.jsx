@@ -1,116 +1,62 @@
 import React,{useEffect,useState} from 'react'
-import { createTracks, listConferenceBtwDate } from '../Services/ConferenceServices';
+import { createCommittee } from '../Services/ConferenceServices';
 import { useLoaderData } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
-const TrackCreation = () => {
-  const data=useLoaderData();
-  const conference=data.data;
-  const navigate = useNavigate();
-  const [conferenceId, setConferenceId] = useState('');
-  // useEffect(()=>{
-  //   fetchData();
-  //  },[]);
-  // const fetchData=()=>{
-    
-  //   listConferenceBtwDate().then((Response)=>{
-  //    console.log(Response.data);
-  //    console.log(typeof Response.data);
-  //    setConference(Response.data);
-  //   }).catch((err)=>{
-  //     console.log(err);
-  //   })
-  // }
 
-  useEffect(() => {
-    if (!conference || Object.keys(conference).length === 0) {
-      // If conference data is empty, show popup or navigate back
-      //alert('Conference data is empty. Please go back and select a conference.');
-      navigate("/conference-root"); // Navigate back to previous page
-    }
-  }, [conference, navigate]);
+function CommitteeRegistration() {
+    const data=useLoaderData();
+    const conference=data.data;
+    const navigate = useNavigate();
+    const [conferenceId, setConferenceId] = useState('');
+  
+    useEffect(() => {
+      if (!conference || Object.keys(conference).length === 0) {
+        // If conference data is empty, show popup or navigate back
+        //alert('Conference data is empty. Please go back and select a conference.');
+        navigate("/conference-root"); // Navigate back to previous page
+      }
+    }, [conference, navigate]);
 
+    const [tracks, setTracks] = useState([]);
+    const [trackInput, setTrackInput] = useState('');
+    const [completionMessage, setCompletionMessage] = useState('');
+    const [errors, setErrors] = useState('');
+  
+    const handleAddTrack = () => {
+      if (trackInput.trim() !== '') {
+        setTracks([...tracks, trackInput]);
+        setTrackInput('');
+      }
+    };
+  
+    const handleRemoveTrack = (index) => {
+      const updatedTracks = [...tracks];
+      updatedTracks.splice(index, 1);
+      setTracks(updatedTracks);
+    };
+  
+    const handleFormSubmit = (e) => {
+        e.preventDefault();
+        setErrors('');
+        if(tracks.length===0){
+           setErrors("aaa");
+            return;
+        }
+        createCommittee(conference.conference_id,tracks).then((r)=>{
+          console.log(r.data);
+          setCompletionMessage(r.data);
+          setTracks([]);
+          setTimeout(()=>{
+            // navigate(-1);
+            setCompletionMessage('');
+      
+          },2000);
+        }).catch((err)=>{
+            console.log(err);
+        })
 
-
-
-
-
-
-
-
-
-    const [conferenceName, setConferenceName] = useState('');
-  const [subject, setSubject] = useState('');
-  const [tracks, setTracks] = useState([]);
-  const [trackInput, setTrackInput] = useState('');
-  const [completionMessage, setCompletionMessage] = useState('');
-  const [errors, setErrors] = useState({
-    conferenceName: '',
-    subject: ''
-  });
-
-  const handleAddTrack = () => {
-    if (trackInput.trim() !== '') {
-      setTracks([...tracks, trackInput]);
-      setTrackInput('');
-    }
-  };
-
-  const handleRemoveTrack = (index) => {
-    const updatedTracks = [...tracks];
-    updatedTracks.splice(index, 1);
-    setTracks(updatedTracks);
-  };
-
-  const handleFormSubmit = (e) => {
-    console.log("fff");
-    e.preventDefault();
-
-    const newErrors = {};
-    if (tracks.length === 0) newErrors.tracks = 'At least one track is required.';
-    setErrors(newErrors);
-
-    if (Object.keys(newErrors).length > 0) {
-      return;
-    }
-    // Form submission logic here
-    //const tracksdata={conferenceId,tracks};
-    createTracks(conference.conference_id,tracks).then((Response)=>{
-      console.log(Response.data);
-      setCompletionMessage(Response.data);
-    //   setTimeout(() => {
-    //     navigate(-1); // Navigate back to previous page
-    //   }, 2000); // 2000 milliseconds = 2 seconds
-    // })
-    setConferenceName('');
-    setSubject('');
-    setTracks([]);
-    setTrackInput('');
-    setTimeout(()=>{
-      // navigate(-1);
-      setCompletionMessage('');
-
-    },2000);
-    }).catch((err)=>{
-      console.log(err);
-    })
-    console.log({
-      conferenceName,
-      subject,
-      tracks,
-      conferenceId
-    });
-
-    // Reset form fields after submission
-   
-  };
-  const handleConferenceChange = (e) => {
-    const selectedConference = conference.find(conf => conf.conferences_title === e.target.value);
-    if (selectedConference) {
-      setSubject(selectedConference.subject);
-      setConferenceId(selectedConference.conference_id);
-    }
-    setConferenceName(e.target.value);
-  };
+        
+    };
   return (
     <div>
         
@@ -123,7 +69,7 @@ const TrackCreation = () => {
 </p>
         <div className="card">
           <div className="card-body">
-            <h3 className="card-title text-center mb-4">Tracks</h3>
+            <h3 className="card-title text-center mb-4">Committee</h3>
             {completionMessage && (
                 <div className="alert alert-success" role="alert">
                   {completionMessage}
@@ -160,12 +106,12 @@ const TrackCreation = () => {
                 <div className="invalid-feedback">{errors.subject}</div>
               </div> */}
               <div className="mb-3">
-                <label className="form-label">Tracks:</label>
+                <label className="form-label">Committee:</label>
                 <div className="input-group mb-3">
                   <input
                     type="text"
                     className="form-control"
-                    placeholder="Type track name"
+                    placeholder="Type Committee name"
                     value={trackInput}
                     onChange={(e) => setTrackInput(e.target.value)}
                   />
@@ -191,7 +137,7 @@ const TrackCreation = () => {
                     </li>
                   ))}
                 </ul>
-                {errors.tracks && <div className="invalid-feedback d-block">{errors.tracks}</div>}
+                {errors && <div className="invalid-feedback d-block">{errors}</div>}
               </div>
               <button type="submit" className="btn btn-primary w-100 mt-3" >
                 Submit
@@ -206,4 +152,4 @@ const TrackCreation = () => {
   )
 }
 
-export default TrackCreation
+export default CommitteeRegistration

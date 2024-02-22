@@ -6,9 +6,9 @@ import java.util.List;
 import java.util.Set;
 
 public interface UserService {
-    public boolean createUser(List<UserDto> userDto, Integer conference_id);
+    public boolean createUser(List<UserDto> userDto, Integer committee_id, Integer conference_id);
 
-    public boolean createReviewer(List<UserDto> userDto, Integer conference_id);
+    // public boolean createReviewer(List<UserDto> userDto, Integer conference_id);
 
     public UserDto updateUser(UserDto userDto, Integer user_id);
 

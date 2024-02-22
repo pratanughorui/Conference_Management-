@@ -2,8 +2,10 @@ package com.conference.payloads;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
+import com.conference.entities.Track;
 import com.conference.entities.Users;
 
 import jakarta.validation.constraints.NotEmpty;
@@ -43,6 +45,8 @@ public class ConferenceDto {
     private String lastdaterevsub;
 
     private String creationDateTimeAsString;
+    private List<TrackDto> tracks;
+    private List<CommitteeDto> committees;
 
     // private Set<AuthorWorkDto> author_Works;
     // private Set<UserDto> user;

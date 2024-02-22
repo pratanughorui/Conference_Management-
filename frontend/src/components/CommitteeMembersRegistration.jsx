@@ -8,12 +8,22 @@ const CommitteeMembersRegistration = () => {
   const conference=data.data;
   const[role,setRoles]=useState([])
   const [conferenceId, setConferenceId] = useState('');
-  const [completionMessage, setCompletionMessage] = useState('');
+  const [completionMessage, setCompletionMessage] = useState(''); 
+    const [errorMessage,setErrorMessage]=useState('');
   const [roleId, setRoleId] = useState('');
+  const[committee,setCommittee]=useState([]);
+  const[committeeId,setCommitteeId]=useState('');
+  const[committeeName,setCommitteeName]=useState('');
   useEffect(()=>{
    //fetchconference();
    fetchRoles();
   },[]);
+
+  useEffect(()=>{
+    if(conference){
+      setCommittee(conference.committees);
+    }
+  },[conference]);
   //  const fetchconference = () => {
   //   listConferenceBtwDate().then((Response)=>{
   //      setConference(Response.data);
@@ -43,6 +53,7 @@ const CommitteeMembersRegistration = () => {
     const [email, setEmail] = useState('');
     const [errors, setErrors] = useState({
      // conferenceName: '',
+      committeeId:'',
       roleName:'',
       name: '',
       address: '',
@@ -56,7 +67,8 @@ const CommitteeMembersRegistration = () => {
 // ----------------------------------------data submission-----------------------------------
     const finalsave=(e)=>{
       e.preventDefault();
-      createCommitteeMembers(newmembers,conference.conference_id).then((Response)=>{
+      console.log(newmembers);
+      createCommitteeMembers(newmembers,conference.conference_id,committeeId).then((Response)=>{
         console.log(Response.data);
         setCompletionMessage('Members created successfully!');
         setNewmembers([]);
@@ -76,7 +88,7 @@ const CommitteeMembersRegistration = () => {
       setCompletionMessage('');
     },3000)
     }
-    
+    let [count,setCount]=useState(0);
     const handleSubmit = (e) => {
       e.preventDefault();
       // Add new member to the list
@@ -91,6 +103,8 @@ const CommitteeMembersRegistration = () => {
       if (!email) newErrors.email = 'Email is required.';
       if (!password) newErrors.password = 'Password is required.';
       if (!roleName) newErrors.roleName = 'roleName is required.';
+      if (!committeeId) newErrors.committeeId = 'committeeId is required.';
+
       setErrors(newErrors);
       // If there are any errors, stop form submission
       if (Object.keys(newErrors).length > 0) {
@@ -98,7 +112,26 @@ const CommitteeMembersRegistration = () => {
         return;
       }
 //submission code
-     const member_details={name,address,place,state,country,password,mobile,email,roleName}
+
+if(count===0){
+  setCount(committeeId);
+  console.log(count);
+}else if(count != committeeId){
+    setErrorMessage("multiple track not allowed");
+    setTimeout(()=>{
+      setErrorMessage('');
+     },2000)
+    return;
+}
+if(newmembers.length>0 && newmembers.findIndex(iteam=>iteam.email===email && iteam.committeeId===committeeId)!=-1){
+  setErrorMessage("repeated");
+    setTimeout(()=>{
+      setErrorMessage('');
+     },2000)
+  
+  return;
+}
+     const member_details={name,address,place,state,country,password,mobile,email,roleName,committeeId}
      
     //  setNewmembers([...newmembers,member_details]);
     newmembers.push(member_details);
@@ -124,6 +157,8 @@ const CommitteeMembersRegistration = () => {
       setMobile('');
       setEmail('');
       setRoleName('');
+      setCommitteeId('');
+      setCommitteeName('');
   };
   const getOldData=()=>{
     gellAllusersBeforDate().then((Response)=>{
@@ -138,6 +173,7 @@ const CommitteeMembersRegistration = () => {
   }
   const clearnewmembersTable=()=>{
     setNewmembers([]);
+    setCount(0);
   }
   const populateMemberForm = (member) => {
     setName(member.name);
@@ -156,6 +192,23 @@ const delnewmwmber=(index)=>{
     updatedMembers.splice(index, 1);
     // Update the state with the updated array
     setNewmembers(updatedMembers);
+    if(updatedMembers.length==0){
+      setCount(0);
+    }
+}
+const handleCommitteeChange=(e)=>{
+ console.log(e.target.value);
+ console.log(committee[e.target.selectedIndex-1]);
+ let ind=committee[e.target.selectedIndex-1];
+ if(ind!=0){
+  setCommitteeId(committee[e.target.selectedIndex-1].committee_id);
+  setCommitteeName(e.target.value)
+ }else{
+  setCommittee('');
+ }
+ 
+
+
 }
 
   return (
@@ -165,7 +218,27 @@ const delnewmwmber=(index)=>{
   <span style={{ fontSize: '18px', fontWeight: 'bold', color: 'teal' }}>Conference Name: {conference.conferences_title}</span>
 </p>
                 <div className="col-md-6">
-                
+                  <div className="card">
+                    <div className="card-body">
+                      <label htmlFor="committee" className="form-label">Committee:</label>
+                      <select
+                    className={`form-control ${errors.committeeId ? 'is-invalid' : ''}`}
+                    // value={roleName}
+                     onChange={handleCommitteeChange}
+                    
+                  >
+                    <option value="">Select Committee</option>
+                    
+                    {committee.map((con, index) => (
+                          <option key={index} value={con.committee_name}>
+                               {con.committee_name}
+                      </option>
+                     ))}
+                  </select>
+                  <div className="invalid-feedback">{errors.committeeId}</div>
+                    </div>
+                    
+                  </div>
                     <div className="card">
                     
                         <div className="card-body">
@@ -289,13 +362,19 @@ const delnewmwmber=(index)=>{
                         </div>
                     </div>
                     <div className="card mt-3">
-                    {completionMessage && (
-                  <div className="alert alert-success" role="alert">
-                    {completionMessage}
-                  </div>
-                )}
+                    {completionMessage && !errorMessage && (
+    <div className="alert alert-success" role="alert">
+        {completionMessage}
+    </div>
+)}
+
+{errorMessage && !completionMessage && (
+    <div className="alert alert-danger" role="alert">
+        {errorMessage}
+    </div>
+)}
                         <div className="card-body">
-                            <h2>Members</h2>
+                            <h2>Members For <span>{committeeName}</span></h2>
                             <table className="table">
                             <thead>
             <tr>

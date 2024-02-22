@@ -15,6 +15,7 @@ import {listConferenceBtwDate,gellAllRoles,gellAllAuthors} from './Services/Conf
 import ReviewersRegistration from './components/ReviewersRegistration.jsx'
 import Conference_Root from './components/Conference_Root.jsx'
 import TopicCreation from './components/TopicCreation.jsx'
+import CommitteeRegistration from './components/CommitteeRegistration.jsx'
 // const router=createBrowserRouter(
 //   createRoutesFromElements(
 //       <Route path='/' element={<Login/>}></Route>,
@@ -81,7 +82,7 @@ const router=createBrowserRouter([
     
     children:[
       {
-        path:'conference-root',
+        path:'',
         element:<Conference_Root/>
       },
       {
@@ -115,6 +116,10 @@ const router=createBrowserRouter([
     },{
       path:'/topic-creation',
       element:<TopicCreation/>,
+      loader:listConferenceBtwDate
+    },{
+      path:'/committee-registration',
+      element:<CommitteeRegistration/>,
       loader:listConferenceBtwDate
     }
 ])

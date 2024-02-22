@@ -23,6 +23,7 @@ import com.conference.entities.Authors;
 import com.conference.entities.Authors_work;
 import com.conference.entities.Conference;
 import com.conference.entities.Role;
+import com.conference.entities.Topics;
 import com.conference.entities.Users;
 import com.conference.entities.Work;
 import com.conference.exceptions.ResourceNotFoundException;
@@ -33,6 +34,7 @@ import com.conference.payloads.UserDto;
 import com.conference.repositories.AuthorRepo;
 import com.conference.repositories.Authors_workRepo;
 import com.conference.repositories.ConferenceRepo;
+import com.conference.repositories.TopicRepo;
 import com.conference.repositories.UserRepo;
 import com.conference.repositories.WorkRepo;
 import com.conference.services.AuthorService;
@@ -54,11 +56,17 @@ public class AuthorServiceImple implements AuthorService {
     @Autowired
     private Authors_workRepo authors_workRepo;
 
+    @Autowired
+    private TopicRepo topicRepo;
+
     @Override
-    public AuthorWorkDto CreateAuthorWork(AuthorWorkDto authorWorkDto, Integer conference_id) {
+    public AuthorWorkDto CreateAuthorWork(AuthorWorkDto authorWorkDto, Integer topic_id, Integer conference_id) {
+        Topics topic = this.topicRepo.findById(topic_id)
+                .orElseThrow(() -> new ResourceNotFoundException("Topic", "id", topic_id));
         Conference conference = this.conferenceRepo.findById(conference_id)
-                .orElseThrow(() -> new ResourceNotFoundException("Conference", "id", conference_id));
+                .orElseThrow(() -> new ResourceNotFoundException("Cpmference", "id", conference_id));
         Authors_work authors_work = this.modelMapper.map(authorWorkDto, Authors_work.class);
+        authors_work.setTopics(topic);
         authors_work.setConferences(conference);
         Authors_work saved_authors_work = this.authors_workRepo.save(authors_work);
         String pdfname = authorWorkDto.getPdf_name();
@@ -171,14 +179,14 @@ public class AuthorServiceImple implements AuthorService {
     }
 
     @Override
-    public Set<AuthorWorkDto> getallauthors(Integer conference_id) {
+    public List<AuthorWorkDto> getallauthors(Integer conference_id) {
         // TODO Auto-generated method stub
         Conference conference = this.conferenceRepo.findById(conference_id)
                 .orElseThrow(() -> new ResourceNotFoundException("Conference", "id", conference_id));
-        Set<Authors_work> authors_works = conference.getAuthors();
-        Set<AuthorWorkDto> authorWorkDtos = authors_works.stream()
+        List<Authors_work> authors_works = conference.getAuthors();
+        List<AuthorWorkDto> authorWorkDtos = authors_works.stream()
                 .map(con -> this.modelMapper.map(con, AuthorWorkDto.class))
-                .collect(Collectors.toSet());
+                .collect(Collectors.toList());
         return authorWorkDtos;
     }
 

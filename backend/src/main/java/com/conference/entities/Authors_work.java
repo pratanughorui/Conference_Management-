@@ -24,6 +24,7 @@ public class Authors_work {
     private int author_id;
     private String name;
     private String address;
+    private String affiliation;
     private String city;
     private String state;
     private String country;
@@ -34,6 +35,10 @@ public class Authors_work {
     private String key_words;
     private String abstractText;
     private String pdf_name;
+    @ManyToOne
+    @JoinColumn(name = "topic_id")
+    private Topics topics;
+
     @ManyToOne
     @JoinColumn(name = "conference_id")
     private Conference conferences;
