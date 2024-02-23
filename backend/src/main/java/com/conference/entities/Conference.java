@@ -111,6 +111,8 @@ public class Conference {
 
   @OneToMany(mappedBy = "conference", cascade = CascadeType.REMOVE)
   private List<Track> tracks;
+  @OneToMany(mappedBy = "conference", cascade = CascadeType.REMOVE)
+  private List<Allotments> allotments;
 
   @OneToMany(mappedBy = "conference", cascade = CascadeType.REMOVE)
   private List<Committee> committees;

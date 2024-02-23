@@ -3,6 +3,7 @@ package com.conference.entities;
 import java.util.ArrayList;
 import java.util.List;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -11,6 +12,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -37,4 +39,8 @@ public class Reviewer {
     @ManyToMany
     @JoinTable(name = "track_reviewer", joinColumns = @JoinColumn(name = "reviewer_id"), inverseJoinColumns = @JoinColumn(name = "track_id"))
     private List<Track> tracks = new ArrayList<>();
+
+    @OneToMany(mappedBy = "reviewers", cascade = CascadeType.REMOVE)
+    private List<Allotments> allotments;
+
 }
