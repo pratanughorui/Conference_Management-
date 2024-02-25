@@ -34,7 +34,15 @@ public class Reviewer {
     private String mobile;
     @Column(unique = true)
     private String email;
+
     @ManyToMany
     @JoinTable(name = "track_reviewer", joinColumns = @JoinColumn(name = "reviewer_id"), inverseJoinColumns = @JoinColumn(name = "track_id"))
     private List<Track> tracks = new ArrayList<>();
+
+    // @ManyToMany(mappedBy = "reviewers")
+    // private List<Authors_work> authorWorks = new ArrayList<>();
+
+    @ManyToMany
+    @JoinTable(name = "allotments", joinColumns = @JoinColumn(name = "reviewer_id"), inverseJoinColumns = @JoinColumn(name = "author_work_id"))
+    private List<Authors_work> authorWorks = new ArrayList<>();
 }

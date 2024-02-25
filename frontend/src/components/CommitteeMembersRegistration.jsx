@@ -71,6 +71,7 @@ const CommitteeMembersRegistration = () => {
       createCommitteeMembers(newmembers,conference.conference_id,committeeId).then((Response)=>{
         console.log(Response.data);
         setCompletionMessage('Members created successfully!');
+        setCount(0);
         setNewmembers([]);
         clearFields();
     }).catch((error)=>{

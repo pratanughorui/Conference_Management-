@@ -1,5 +1,8 @@
 package com.conference.entities;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import jakarta.annotation.Generated;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -7,6 +10,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
@@ -42,4 +47,7 @@ public class Authors_work {
     @ManyToOne
     @JoinColumn(name = "conference_id")
     private Conference conferences;
+
+    @ManyToMany(mappedBy = "authorWorks")
+    private List<Reviewer> reviewers = new ArrayList<>();
 }

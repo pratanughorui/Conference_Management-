@@ -1,21 +1,29 @@
 import React, { useEffect, useState } from 'react';
-import { createTracks, listConferenceBtwDate,gellAllAuthors,gellAllReviewers,getalltracks,getallreviewersbytrack } from '../Services/ConferenceServices';
+import { createTracks, listConferenceBtwDate,gellAllAuthors,gellAllReviewers,getalltracks,getallreviewersbytrack,createPaperallot } from '../Services/ConferenceServices';
 import { useLoaderData } from 'react-router-dom';
 
 const PaperAllotments = () => {
+  //fetch conference data
   const data = useLoaderData();
   const conference = data.data;
  
-  //console.log(conference.tracks);
  const [authors, setAuthors] = useState([]);
- const [formauthors, setFormauthors] = useState([]);
  const [revieres, setRevieres] = useState([]);
- let [trackid, setTrackid] = useState('');
  const [tracks,setTracks]=useState([]);
  const[topics,setTopics]=useState([]);
+ const [reviewer, setReviewer] = useState('');
+ const [informations, setInformations] = useState([]);
+ const [informationsfordb, setInformationsfordb] = useState([]);
+ const [completionMessage, setCompletionMessage] = useState('');
+ const [errorMessage,setErrorMessage]=useState('');
+ const [authorWork,setauthorWork]=useState({});
+const [title,setTitle]=useState('');
+ const [errors, setErrors] = useState({
+   paper: '',
+   reviewer: ''
+ });
 
-
- useEffect(() => {
+useEffect(() => {
   // Assuming 'conference' is defined somewhere
   if (conference) {
       // Update tracks state
@@ -24,107 +32,80 @@ const PaperAllotments = () => {
 }, [conference]); // Dependency array ensures the effect runs whenever 'conference' changes
 
 useEffect(() => {
-  // Map over 'tracks' and extract topics when 'tracks' state updates
   const extractedTopics = tracks.flatMap(track => track.topics);
   setTopics(extractedTopics);
-  
 }, [tracks]); // Dependency array ensures the effect runs whenever 'tracks' changes
 
 const handleTopicChange=(e)=>{
   setAuthors(topics[e.target.selectedIndex-1].authors);
-  console.log(topics[e.target.selectedIndex-1].authors);
-}
-const [title,setTitle]=useState('');
-const handleauthordata=(index)=>{
-  console.log(authors[index]);
-  setTitle(authors[index].title);
+ // console.log(topics[e.target.selectedIndex-1].authors);
 }
 
-const trackFetching=()=>{
-  getalltracks(conference.conference_id).then((Response)=>{
-     setTracks(Response.data);
-     console.log(Response.data);
-  }).catch((err)=>{
-    console.log(err);
-  })
+const handleauthordata=(member,titlename)=>{
+  //console.log(member);
+  setTitle(titlename);
+  setauthorWork(member);
 }
 
 const fetchreviewers=(e)=>{
    
   //console.log(e.target.value);
-  if(e.target.value){
-    getallreviewersbytrack(e.target.value).then((r)=>{
-      setRevieres(r.data);
-      console.log(r.data);
-     }).catch((err)=>{
-      console.log(err.data);
-     })
+  if(e.target.selectedIndex){
+    setRevieres(tracks[e.target.selectedIndex-1].reviewers)
+
   }else{
     setRevieres([]);
   }
    
 }
 
-// useEffect(() => {
-//   const updatedFormAuthors = authors.map(author => author.pdf_name);
-//   setFormauthors(updatedFormAuthors);
-// }, [authors]);
-
-//console.log("formauthors:", formauthors);
-  const [indexpaper, setIndexpaper] = useState('');
-  const [reviewer, setReviewer] = useState('');
-  const [paper, setPaper] = useState('');
-
-  const [informations, setInformations] = useState([]);
-  const [completionMessage, setCompletionMessage] = useState('');
-  const [errors, setErrors] = useState({
-    paper: '',
-    reviewer: ''
-  });
-
-
   const handleFormSubmit = (e) => {
-    console.log(paper);
-    console.log(reviewer);
     e.preventDefault();
+    console.log(reviewer);
+    const [reviewerId, name] = reviewer.split(',');
+     
+      // console.log(revieres[reviewer-1].reviewer_id);
+    // e.preventDefault();
+    //-------------for back
+     let authors_work=authorWork.author_id;
+     let reviewer2=reviewerId;
+     //-------------for front
+     const fat=authorWork.title;
+     const frn=name;
 
     const newErrors = {};
-    if (!title) newErrors.paper = 'Paper is required.';
-      if (!reviewer) newErrors.reviewer = 'reviewer is required.';
+    if (!authors_work) newErrors.paper = 'Paper is required.';
+      if (!reviewer2) newErrors.reviewer = 'reviewer is required.';
     setErrors(newErrors);
 
     if (Object.keys(newErrors).length > 0) {
+      setErrorMessage('fillup form')
+      setTimeout(()=>{
+        setErrorMessage('');
+      },3000)
+      return;
+    }
+     //console.log(informations.findIndex(iteam=>iteam.fat===fat && iteam.frn===frn));
+    if(informations.length>0 && informations.findIndex(iteam=>iteam.fat===fat && iteam.frn===frn)!=-1){
+      setErrorMessage("Repeated elements");
+  
+        setTimeout(()=>{
+          setErrorMessage('');
+        },3000)
       
       return;
     }
-    console.log(informations.findIndex(iteam=>iteam.title===title && iteam.reviewer===reviewer));
-    if(informations.length>0 && informations.findIndex(iteam=>iteam.title===title && iteam.reviewer===reviewer)!=-1){
-      setCompletionMessage("Repeated elements");
-      return;
-    }
+    const db={authors_work,reviewer2};
+    informationsfordb.push(db);
+    //console.log(informationsfordb);
 
-    
-    const datas={title,reviewer};
-
-    informations.push(datas);
-    console.log(informations);
-    // const index=formauthors.indexOf(paper);
-    // console.log(index)
-
- 
-    //setCompletionMessage('');
-    
-    // Form submission logic here
-
-    // Reset form fields after submission
+    const front={fat,frn};
+    informations.push(front);
+    //console.log(informations);
   
 
   };
-  if(completionMessage!=null){
-    setTimeout(()=>{
-      setCompletionMessage('');
-    },3000)
-  }
+  
 const removeinfo=(index)=>{
   const updatedinformations = [...informations];
   // Remove the member at the specified index
@@ -132,12 +113,27 @@ const removeinfo=(index)=>{
   // Update the state with the updated array
   setInformations(updatedinformations);
 }
-const handlepapertable=(index)=>{
-  console.log(index);
-}
+
 const submitpaperallotment=()=>{
-  setCompletionMessage('Paper allotment successfully');
-  setInformations([]);
+ 
+console.log(informationsfordb);
+if(informationsfordb){
+  createPaperallot(informationsfordb).then((response)=>{
+    setInformationsfordb([]);
+    setInformations([]);
+    setCompletionMessage(response.data);
+      setTimeout(()=>{
+        setCompletionMessage('');
+      },3000)
+    
+  }).catch((err)=>{
+    setErrorMessage(err);
+    setTimeout(()=>{
+      setErrorMessage('');
+    },3000)
+  })
+}
+
 }
   return (
     <div className="container mt-5">
@@ -163,10 +159,10 @@ const submitpaperallotment=()=>{
                     <option value="">Select Track</option>
                     
                   {
-                    tracks.map(con=>
-                        <option key={con.track_id} value={con.track_id}>{con.track_name}</option>
-                       )
-                  }
+    tracks.map((con, index) => (
+        <option key={index} value={con.track_id}>{con.track_name}</option>
+    ))
+}
                   </select>
                 {/* <div className="invalid-feedback">{errors.conferenceName}</div> */}
               </div>
@@ -182,7 +178,7 @@ const submitpaperallotment=()=>{
                     <option value="">Select Reviewers</option>
                     {
                   revieres.map((member,index)=>(
-                    <option key={index} value={member.name}>{member.name}</option>
+                    <option key={index} value={`${member.reviewer_id},${member.name}`}>{member.name}</option>
 
                   ))
                 }
@@ -213,11 +209,11 @@ const submitpaperallotment=()=>{
           <div className="card">
             <div className="card-body">
             <div className="table-responsive">
-            {completionMessage && (
-                <div className="alert alert-success" role="alert">
-                  {completionMessage}
-                </div>
-              )}
+            {(completionMessage && !errorMessage) && (
+    <div className="alert alert-success" role="alert">{completionMessage}</div>
+)}{(errorMessage && !completionMessage) && (
+    <div className="alert alert-danger" role="alert">{errorMessage}</div>
+)}
     <table className="table table-striped">
       <thead>
         <tr>
@@ -231,8 +227,8 @@ const submitpaperallotment=()=>{
         {
           informations.map((member,index)=>(
             <tr key={index}>
-          <td>{member.reviewer}</td>
-          <td>{member.title}</td>
+          <td>{member.frn}</td>
+          <td>{member.fat}</td>
           <td style={{ cursor: 'pointer' }} onClick={()=>removeinfo(index)}>&#10060;</td>
         </tr>
           ))
@@ -294,7 +290,7 @@ const submitpaperallotment=()=>{
                 {/* Add rows for the new table */}
                 {
                   authors.map((member,index)=>(
-                    <tr key={index} onClick={()=>handleauthordata(index)}>
+                    <tr key={index} onClick={()=>handleauthordata(member,member.title)}>
 
                       <td>{member.name}</td>
                       <td>{member.title}</td>

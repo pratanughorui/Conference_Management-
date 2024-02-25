@@ -67,3 +67,8 @@ export const gellAllreviewersBeforDate=()=>axios.get('http://localhost:9090/Revi
 export const createCommittee=(conferenceId,committee)=>{
   return axios.post(`http://localhost:9090/committee/createcommittee/${conferenceId}`,committee)
 }
+
+//create paper allotments
+export const createPaperallot=(informationdb)=>{
+  return axios.post(`http://localhost:9090/allotment/papersallot`,informationdb)
+}
